@@ -1,0 +1,68 @@
+# Configuración central. Todas las rutas son RELATIVAS a la raíz del repositorio.
+semilla: 42
+
+rutas:
+  crudo: datos/crudo
+  procesado: datos/procesado
+  fichas: datos/fichas
+  manifiesto: datos/manifiesto_descargas.csv
+
+# --- INEGI / RAIAVL (tabulado "Venta de vehículos híbridos y eléctricos por entidad federativa")
+inegi:
+  archivo: datos/crudo/inegi/RAIAVL_11.csv   # exportado a mano desde PxWeb (ver README)
+  anio_inicio: 2016
+  anio_fin: 2026
+
+# --- CENACE: "Energía generada por tipo de tecnología" (exportación manual)
+# Ajusta el mapa a los nombres de columna REALES de tu archivo. Si no coinciden, el ETL falla con un mensaje claro.
+cenace:
+  archivo: datos/crudo/cenace/generacion_por_tecnologia.csv
+  columnas:
+    fecha: fecha
+    region: region
+    tecnologia: tecnologia
+    energia_mwh: energia_mwh
+  # Tecnologías "limpias" según la Ley de la Industria Eléctrica (lista citada por IMCO: biomasa, eólica,
+  # geotérmica, hidroeléctrica, nucleoeléctrica y fotovoltaica). Se buscan como FRAGMENTOS del nombre
+  # (ya sin acentos y en minúsculas) para tolerar variantes como "geotermoelectrica". Revísalo contra tu archivo.
+  tecnologias_limpias: [biomasa, eolic, geoter, hidro, nucle, fotovolt]
+  # Intensidad de emisiones por tecnología (gCO2e/kWh, ciclo de vida). La llenas tú, con fuente (ver README).
+  factores_tecnologia: datos/crudo/cenace/factores_emision_por_tecnologia.csv
+
+# --- Mapeo entidad federativa -> región de control de CENACE (lo llenas tú, ver README)
+crosswalk_entidad_region: config/crosswalk_entidad_region.csv
+
+# --- Baterías (descargas manuales)
+nasa_pcoe:
+  carpeta: datos/crudo/nasa_pcoe        # archivos B00xx.mat (se buscan recursivamente)
+calce:
+  carpeta: datos/crudo/calce            # xlsx de Arbin por celda, p.ej. CS2_35/*.xlsx
+oxford:
+  archivo: datos/crudo/oxford/Oxford_Battery_Degradation_Dataset_1.mat
+
+# --- GREET / BatPaC: extracción manual a plantilla CSV (no hay descarga automática)
+greet_batpac:
+  archivo: datos/crudo/greet_batpac/parametros_ciclo_vida.csv
+
+# --- USGS Mineral Commodity Summaries 2026 (data release, CSV)
+usgs:
+  carpeta: datos/crudo/usgs
+  minerales: [lithium, cobalt, nickel, manganese, graphite]
+
+# --- NASA POWER (temperatura mensual). Puntos que tú defines en config/puntos_interes.csv
+power:
+  puntos: config/puntos_interes.csv
+  comunidad: RE
+  parametros: [T2M, T2M_MAX, T2M_MIN]
+  anio_inicio: 2016
+  anio_fin: 2025
+  salida: datos/crudo/power/temperatura_mensual.csv
+
+# --- Cobertura vegetal en zonas mineras (Landsat C2 L2 vía Planetary Computer; dependencias opcionales)
+vegetacion:
+  zonas: config/zonas_mineras.csv       # nombre, oeste, sur, este, norte (bbox en grados)
+  coleccion: landsat-c2-l2
+  nubes_max: 30
+  resolucion_grados: 0.0003             # ~30 m
+  anios: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  salida: datos/crudo/vegetacion/ndvi_anual_zonas.csv

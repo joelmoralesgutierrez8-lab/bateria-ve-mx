@@ -1,0 +1,116 @@
+# Metadatos de las fichas. "verificado" = confirmado en la página oficial durante la sesión de Fase 1 (nov 2026).
+# "por verificar" = dato que debes confirmar tú en la fuente antes de citarlo.
+inegi_ventas:
+  nombre: Ventas de vehículos híbridos y eléctricos por entidad federativa (INEGI, RAIAVL)
+  url: https://www.inegi.org.mx/app/tabulados/pxwebv2/pxweb/es/RAIAVL/RAIAVL/RAIAVL_11.px/
+  origen_geografico: México; desglose por entidad federativa (32 + "No especificado")
+  clima: No aplica
+  periodo_nominal: 2016 - 2026 (último mes publicado = el que detecta el ETL)
+  variables: Unidades eléctricas, híbridas enchufables e híbridas, por año, mes y entidad
+  licencia: "INEGI: términos de libre uso de la información (por verificar texto vigente). El tabulado declara Copyright = No."
+  sesgos_conocidos:
+    - "Ventas de vehículos NUEVOS reportadas por unidades económicas del registro; no incluye autos usados importados (por verificar el alcance exacto en la ficha metodológica del RAIAVL)."
+    - "Un boletín de 2026 indica que una marca no entregó datos de ventas de un mes: el registro depende de que cada empresa reporte."
+    - "Las cifras del último mes son revisadas y pueden cambiar; pasan a definitivas cada febrero (nota al pie del tabulado)."
+    - "Entidad = lugar de comercialización según el registro (por verificar); no necesariamente donde circula el vehículo."
+    - "Híbridos (HEV) llevan baterías mucho más pequeñas que BEV/PHEV: no sumar unidades como si fueran equivalentes."
+    - "El tabulado no trae capacidad de batería (kWh) ni química: hay que cruzarlo con fichas de modelos."
+cenace_generacion:
+  nombre: Energía generada por tipo de tecnología (CENACE, Sistema de Información del Mercado)
+  url: https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx
+  origen_geografico: "México; nivel nacional (SEN). Verificado: CENACE solo publica generación liquidada por tecnología para el SEN completo, sin desglose por Gerencia de Control Regional (se usa SEN como línea base nacional)."
+  clima: No aplica
+  periodo_nominal: "2016-05 a 2026-10 (126 meses, Liquidación Original L0, verificado en SIM)"
+  variables: "Energía (MWh) por tecnología (11 tecnologías: Eólica, Fotovoltaica, Biomasa, Carboeléctrica, Ciclo Combinado, Combustión Interna, Geotermoeléctrica, Hidroeléctrica, Nucleoeléctrica, Térmica Convencional, Turbo Gas), fecha y sistema (SEN)"
+  licencia: Datos abiertos/públicos del Sistema de Información del Mercado (SIM) de CENACE
+  sesgos_conocidos:
+    - "CENACE solo publica la generación liquidada por tipo de tecnología a nivel nacional (Sistema = SEN), sin desagregar por las 8 Gerencias de Control Regional ni por los 3 sistemas interconectados (SIN, BCA, BCS). Se utiliza el SEN como línea base nacional mientras se evalúa si existe fuente regional por tecnología."
+    - "IPCC AR5 (Anexo III, Tabla A.III.2) no reporta medianas de ciclo de vida separadas para térmica convencional (combustóleo), turbogás (ciclo abierto) ni combustión interna (diésel/combustóleo); mientras no se incorpore una segunda fuente citada para esas 3 tecnologías, quedan registradas como faltantes en tabla_datos_faltantes."
+    - "PROVISIONAL (actualizado 2026-11-18): para no dejar huecos se asignaron factores aproximados en factores_emision_por_tecnologia.csv: turbogás = 490 g CO2e/kWh (mediana de ciclo combinado, probablemente SUBESTIMA porque el ciclo abierto es menos eficiente); térmica convencional y combustión interna = 820 g CO2e/kWh (mediana de carbón, usada como cota alta). Son supuestos, no valores medidos; sustituir por régimen térmico del COPAR (CFE) + factores IPCC 2006 y probarlos en el análisis de sensibilidad."
+    - "Con la nueva legislación eléctrica de 2025 la CRE se extinguió y pasó a ser la Comisión Nacional de Energía (CNE): los nombres y rutas institucionales pueden haber cambiado."
+    - "Generación liquidada (L0) despachada en el mercado eléctrico mayorista: no incluye generación distribuida exenta ni autoconsumo fuera del MEM."
+    - "El factor oficial FESEN (SEMARNAT, usa datos de la CRE/CNE) es un solo número nacional anual."
+nasa_pcoe:
+  nombre: Li-ion Battery Aging Datasets (NASA Ames Prognostics Center of Excellence)
+  url: https://www.nasa.gov/content/prognostics-center-of-excellence-data-set-repository
+  origen_geografico: Laboratorio NASA Ames, EE. UU. (celdas de prueba, no autos en uso real)
+  clima: Cámara ambiental; varias temperaturas ambiente (por verificar cuáles en el README del dataset)
+  periodo_nominal: Datos de laboratorio (publicado 2007-2010); no es una serie calendario
+  variables: Voltaje, corriente, temperatura, capacidad (Ah) por ciclo; impedancia
+  licencia: Datos públicos de NASA (por verificar términos de uso del repositorio)
+  sesgos_conocidos:
+    - "Celdas 18650 de 2 Ah de la época: química y diseño distintos a un paquete de VE actual."
+    - "Pocas celdas (decenas) y perfiles de uso de laboratorio."
+    - "Sin baja temperatura ni calor extremo comparable al norte de México (por verificar el rango real)."
+    - "Tratamiento aplicado en el ETL: se omitieron 4 ciclos de descarga sin capacidad registrada (Capacity vacío) en B0050 y 21 ciclos en B0052 (25 en total); el ETL deja un aviso en el log por cada uno. Los números de ciclo del procesado se cuentan solo sobre descargas con capacidad."
+calce:
+  nombre: CALCE Battery Data (Univ. de Maryland)
+  url: https://calce.umd.edu/data
+  origen_geografico: Laboratorio en EE. UU.
+  clima: Pruebas en cámara (la página lista OCV de -10 a 50 °C para algunas celdas; los ciclos CS2 por verificar)
+  periodo_nominal: CS2 registrado 2010-2013 (según un resumen de la literatura)
+  variables: Ciclado de celdas prismáticas CS2 (LiCoO2, 1100 mAh), cilíndricas y otras; archivos Excel de Arbin
+  licencia: Términos de uso en la página del grupo (por verificar texto; pide citar las publicaciones asociadas)
+  sesgos_conocidos:
+    - "Celdas pequeñas de electrónica portátil (CS2), no paquetes automotrices."
+    - "Algunas celdas (CS2_8, CS2_21) están en .txt de CADEX y se omiten en este ETL."
+oxford:
+  nombre: Oxford Battery Degradation Dataset 1
+  url: https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac
+  origen_geografico: Laboratorio de Oxford, Reino Unido
+  clima: UNA sola temperatura (40 °C)
+  periodo_nominal: Pruebas 2015-01-08 a 2016-12-31
+  variables: 8 celdas Kokam pouch de 740 mAh; caracterización cada 100 ciclos bajo perfil urbano
+  licencia: Open Database License (ODbL 1.0); citar el DOI del dataset y la tesis de Birkl (2017)
+  sesgos_conocidos:
+    - "Solo 8 celdas, todas a 40 °C: no sirve para aprender el efecto de la temperatura."
+    - "Celdas pequeñas, no paquetes."
+    - "Archivo de 262 MB; puede estar en formato MATLAB v7.3."
+greet_batpac:
+  nombre: GREET (R&D GREET 1/2) y BatPaC, Argonne National Laboratory
+  url: https://greet.anl.gov  |  https://www.anl.gov/cse/batpac-model-software
+  origen_geografico: Modelos con supuestos estadounidenses (mezcla eléctrica, cadenas de suministro, tecnologías)
+  clima: No aplica
+  periodo_nominal: Versión anual del modelo (anota la versión usada en cada fila)
+  variables: Parámetros de ciclo de vida (emisiones y energía de fabricación/reciclaje) y diseño/costo de baterías
+  licencia: GREET gratuito con registro y términos de uso (citar a Argonne; publicar resultados indicando que GREET fue desarrollado por Argonne). BatPaC de libre descarga en hoja de cálculo.
+  sesgos_conocidos:
+    - "Valores por defecto basados en EE. UU.: hay que sustituir la mezcla eléctrica por la mexicana donde sea posible."
+    - "GREET se ejecuta en Excel/.NET sobre Windows: no hay descarga automática ni API; la extracción es manual y trazable."
+    - "Argonne advierte que no todas las rutas de R&D GREET sirven cuando se exige alta precisión cuantitativa."
+    - "Los valores de parametros_ciclo_vida.csv NO salen de correr GREET: son cifras publicadas (Kelly, Dai y Wang 2020 con GREET2018; Llamas-Orozco et al. 2023, LCA propio). Ninguna refleja producción mexicana; México importa baterías, sobre todo de cadenas asiáticas (supuesto a documentar). Las cifras de Llamas-Orozco vienen de fuente secundaria y deben verificarse."
+usgs_mcs:
+  nombre: Mineral Commodity Summaries 2026 - Data Release (USGS)
+  url: https://doi.org/10.5066/P1WKQ63T
+  origen_geografico: Mundial por país (producción y reservas), con foco en EE. UU.
+  clima: No aplica
+  periodo_nominal: 2021 - 2025
+  variables: Producción, reservas, comercio por mineral, en archivos CSV con metadatos
+  licencia: CC0 1.0 (dominio público)
+  sesgos_conocidos:
+    - "Datos nacionales anuales; no localiza minas ni zonas concretas."
+    - "Muchas cifras son estimaciones redondeadas; algunas se omiten por confidencialidad."
+    - "México aparece como país productor solo para algunos minerales; no hay detalle de impactos locales."
+nasa_power:
+  nombre: NASA POWER - temperatura mensual a 2 m (T2M, T2M_MAX, T2M_MIN)
+  url: https://power.larc.nasa.gov/docs/services/api/temporal/monthly/
+  origen_geografico: Global, rejilla de resolución gruesa (decenas de km; por verificar la resolución exacta del producto)
+  clima: Reanálisis; suaviza extremos locales
+  periodo_nominal: el que pidas en config (por defecto 2016-2025)
+  variables: Temperatura a 2 m promedio, máxima y mínima mensual
+  licencia: Datos abiertos de NASA POWER (citar según power.larc.nasa.gov/docs/methodology/citations/)
+  sesgos_conocidos:
+    - "Reanálisis, no estación: subestima picos de calor locales, que son los que más degradan baterías."
+    - "Temperatura del aire no es temperatura del paquete de baterías."
+vegetacion:
+  nombre: NDVI anual en zonas mineras (Landsat 8/9 Collection 2 Level-2 vía Microsoft Planetary Computer)
+  url: https://planetarycomputer.microsoft.com/api/stac/v1
+  origen_geografico: Las zonas que definas en config/zonas_mineras.csv
+  clima: Nubosidad filtrada con QA_PIXEL; regiones áridas tienen NDVI bajo de forma natural
+  periodo_nominal: Landsat 8 desde 2013; por defecto 2014-2025
+  variables: NDVI mediano anual por zona
+  licencia: Datos Landsat de USGS/NASA abiertos (por verificar texto de la política de datos)
+  sesgos_conocidos:
+    - "El NDVI mide verdor, no biodiversidad ni calidad de agua/suelo."
+    - "Sin zonas definidas por ti el dataset queda vacío: zonas mineras sin datos = brecha explícita."
+    - "Landsat 30 m; minas pequeñas o subterráneas pueden no verse."

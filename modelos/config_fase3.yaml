@@ -1,0 +1,227 @@
+# Fase 3 - Vida útil (Weibull) y flujo de baterías al fin de vida.
+# Cada supuesto lleva su fuente o se marca como SUPUESTO. Nada se inventa en el código.
+
+semilla: 42
+
+umbrales_soh:
+  eol_vehiculo: 0.80        # fin de vida automotriz (estándar de garantías); métrica principal
+  fin_segunda_vida: 0.70    # salida del almacenamiento estacionario hacia reciclaje
+  sensibilidad_reciclaje: 0.60
+
+deteccion_eol:
+  ciclos_referencia: 5      # la referencia de SoH = mediana de los primeros 5 ciclos válidos de la celda
+  ventana_suavizado: 5      # mediana móvil centrada (quita picos de medición)
+  puntos_consecutivos: 3    # el cruce del umbral debe sostenerse en 3 puntos suavizados seguidos
+  capacidad_minima_valida_ah: 0.05   # lecturas por debajo = fallas del registro, se descartan
+  ref_minima_vs_nominal: 0.85        # celda excluida si su referencia < 85% de la nominal (dato inicial anómalo)
+  soh_maximo_plausible: 1.05         # celda excluida si su SoH suavizado supera esto (referencia mal medida)
+
+conjuntos:
+  calce:
+    archivo: datos/procesado/bateria_calce.csv
+    capacidad_nominal_ah: 1.10
+    fuente_nominal: "CALCE Battery Research Group, celdas CS2 (LiCoO2 prismáticas), capacidad nominal 1100 mAh - https://calce.umd.edu/battery-data"
+    unidad_tiempo: "ciclos completos de descarga a 1C (25 °C)"
+    temperatura_c: 25
+  nasa_pcoe:
+    archivo: datos/procesado/bateria_nasa_pcoe.csv
+    capacidad_nominal_ah: 2.0
+    fuente_nominal: "NASA PCoE Battery Data Set, celdas 18650, capacidad nominal 2 Ah (README del conjunto)"
+    unidad_tiempo: "ciclos de descarga a 2 A"
+    # Solo el experimento de envejecimiento documentado y las pruebas a 24/43 °C. B0033-B0056 tienen
+    # capacidades iniciales anómalas, lecturas en cero o corren a 4 °C (la capacidad baja por frío, no por
+    # degradación): se excluyen y se reporta la razón por celda en resultados/fase3/eol_celdas.csv.
+    excluir:
+      B0033: "capacidad inicial anómala (0.07 Ah)"
+      B0034: "capacidad inicial anómala"
+      B0036: "carga/descarga distinta al experimento base; referencia inestable"
+      B0038: "capacidad inicial anómala"
+      B0039: "capacidad inicial anómala"
+      B0040: "capacidad inicial anómala"
+      B0041: "4 °C y lecturas en cero"
+      B0042: "lecturas en cero"
+      B0043: "lecturas en cero"
+      B0044: "lecturas en cero"
+      B0045: "4 °C y lecturas en cero"
+      B0046: "4 °C y lecturas en cero"
+      B0047: "4 °C y lecturas en cero"
+      B0048: "4 °C y lecturas en cero"
+      B0049: "4 °C y lecturas en cero"
+      B0050: "4 °C, ciclos sin capacidad"
+      B0051: "4 °C y lecturas en cero"
+      B0052: "solo 4 ciclos"
+      B0053: "4 °C y lecturas en cero"
+      B0054: "4 °C y lecturas en cero"
+      B0055: "4 °C, referencia anómala"
+      B0056: "4 °C, referencia anómala"
+  oxford:
+    archivo: datos/procesado/bateria_oxford.csv
+    capacidad_nominal_ah: 0.74
+    fuente_nominal: "Oxford Battery Degradation Dataset 1 (Birkl), celdas Kokam SLPB533459H4 de 740 mAh - https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac"
+    unidad_tiempo: "ciclos de manejo Artemis urbano (parciales), caracterización cada 100"
+    temperatura_c: 40
+
+weibull:
+  bootstrap_repeticiones: 2000
+  nivel_intervalo: 0.90
+  conjuntos_para_beta_comun: [calce, nasa_pcoe, oxford]
+
+salidas:
+  carpeta: resultados/fase3
+
+# ---------------------------------------------------------------- Paso 2: de celda de laboratorio a flota mexicana
+# Cada vehículo simulado combina: vida en ciclos de la celda (Weibull de laboratorio, CALCE a 25 °C), uso
+# (km/año, consumo, tamaño de paquete), temperatura de su estado (Arrhenius) y envejecimiento calendario.
+# Con esas vidas simuladas se ajusta una Weibull de FLOTA en años por entidad y tipo de vehículo.
+vida_flota:
+  vehiculos_simulados: 20000
+  conjunto_celda_referencia: calce          # el único con 6/6 fines de vida en ciclos completos
+  temperatura_referencia_c: 25              # temperatura de las pruebas de CALCE
+  periodo_temperatura: [2016, 2025]         # NASA POWER mensual de la capital de cada estado
+  energia_activacion_kj_mol:
+    distribucion: triangular
+    min: 30            # SUPUESTO de sensibilidad (cota baja)
+    moda: 50
+    max: 55
+    fuente: "Bloom et al. 2003, J. Power Sources 119:874-886, doi:10.1016/S0378-7753(03)00196-4 (50-55 kJ/mol, etapa inicial de degradación, celdas NCA). Cota baja de 30 kJ/mol = supuesto de sensibilidad."
+  km_anio:
+    distribucion: lognormal
+    mediana: 12400     # 34 km/día x 365
+    p90: 20000
+    fuente: "CCA (Tejeda, Le Blanc & Cía., 2009), Medición y adaptación de variables de actividad vehicular en ciudades tipo de México, Cuadro 6.1: automóviles 34 km/día promedio en 6 ciudades (23-42). p90 = 20,000 km/año: BBVA México (15,000-20,000 km/año)."
+  ciclos_lab_a_vehiculo:
+    distribucion: uniforme
+    min: 1.0
+    max: 2.0
+    fuente: "SUPUESTO: CALCE descarga al 100% a 1C; en un auto la profundidad y la corriente son menores, lo que alarga la vida en ciclos equivalentes. Factor a probar en sensibilidad (Fase 6)."
+  vida_calendario_anios_25c:
+    distribucion: triangular
+    min: 15
+    moda: 20
+    max: 25
+    fuente: "SUPUESTO: años a 25 °C para perder 20% solo por envejecimiento calendario. Se combina con el ciclado sumando tasas de pérdida: 1/T = 1/T_ciclos + 1/T_calendario."
+  vida_vehiculo_anios:
+    distribucion: weibull
+    beta: 3.0
+    eta: 16.0
+    fuente: "SUPUESTO (mediana ~14 años). Referencia: EPA, vida media de un auto de 13-14 años, citado por El Universal. El auto puede desecharse antes que su batería (riesgo competitivo)."
+  tipos:
+    BEV:
+      capacidad_kwh: {distribucion: triangular, min: 35, moda: 60, max: 85}
+      fuente_capacidad: "IEA Global EV Outlook 2025: BEV ~65 kWh promedio mundial ponderado por ventas; LFP promedio 38.9 kWh (Adamas Intelligence 2024). Moda 60 = SUPUESTO por la mezcla mexicana de autos más chicos."
+      consumo_kwh_km: {distribucion: uniforme, min: 0.137, max: 0.200}
+      fuente_consumo: "EPA (fueleconomy.gov): Hyundai Ioniq 6 13.7-18.1 kWh/100 km; Chevrolet Bolt 17.3-19.0 kWh/100 km."
+      fraccion_km_electricos: {distribucion: fija, valor: 1.0}
+      retiro_por: bateria_o_vehiculo
+    PHEV:
+      capacidad_kwh: {distribucion: triangular, min: 12, moda: 20, max: 25}
+      fuente_capacidad: "IEA Global EV Outlook 2025: ~20 kWh promedio mundial ponderado por ventas de PHEV estándar."
+      consumo_kwh_km: {distribucion: uniforme, min: 0.137, max: 0.200}
+      fuente_consumo: "Mismo rango EPA que BEV (modo eléctrico)."
+      fraccion_km_electricos: {distribucion: uniforme, min: 0.3, max: 0.7}
+      fuente_fraccion: "SUPUESTO: fracción de km recorridos en modo eléctrico (utility factor)."
+      retiro_por: bateria_o_vehiculo
+    HEV:
+      capacidad_kwh: {distribucion: fija, valor: 1.3}
+      fuente_capacidad: "US DOE Fact #823 (2014): los paquetes de híbridos convencionales promedian ~1.3 kWh."
+      retiro_por: vehiculo
+      nota: "La batería HEV opera en ventanas de carga estrechas (Battery University: <2% de la capacidad por milla); se retira con el auto, no por llegar a 80%."
+  mapeo_capital_entidad:
+    cap_aguascalientes: Aguascalientes
+    cap_baja_california: Baja California
+    cap_baja_california_sur: Baja California Sur
+    cap_campeche: Campeche
+    cap_chiapas: Chiapas
+    cap_chihuahua: Chihuahua
+    cap_ciudad_de_mexico: Ciudad de México
+    cap_coahuila_de_zaragoza: Coahuila de Zaragoza
+    cap_colima: Colima
+    cap_durango: Durango
+    cap_estado_de_mexico: México
+    cap_estado_de_oaxaca: Oaxaca
+    cap_estado_de_veracruz: Veracruz de Ignacio de la Llave
+    cap_guanajuato: Guanajuato
+    cap_guerrero: Guerrero
+    cap_hidalgo: Hidalgo
+    cap_jalisco: Jalisco
+    cap_michoacan: Michoacán de Ocampo
+    cap_morelos: Morelos
+    cap_nayarit: Nayarit
+    cap_nuevo_leon: Nuevo León
+    cap_puebla: Puebla
+    cap_queretaro: Querétaro
+    cap_quintana_roo: Quintana Roo
+    cap_san_luis_potosi: San Luis Potosí
+    cap_sinaloa: Sinaloa
+    cap_sonora: Sonora
+    cap_tabasco: Tabasco
+    cap_tamaulipas: Tamaulipas
+    cap_tlaxcala: Tlaxcala
+    cap_yucatan: Yucatán
+    cap_zacatecas: Zacatecas
+
+# ---------------------------------------------------------------- Paso 3: proyección de ventas
+ventas:
+  horizonte: 2040
+  mercado_total_anual:      # vehículos ligeros nuevos vendidos en México (INEGI RAIAVL, total, no solo eléctricos)
+    2016: 1607165
+    2017: 1534943
+    2018: 1427086
+    2019: 1317931
+    2020: 950063
+    2021: 1014735
+    2022: 1086058
+    2023: 1361433
+    2024: 1504322
+    2025: 1524583
+  fuente_mercado: "INEGI RAIAVL. 2016-2022: comunicado INEGI (mexicoindustry.com, 4-ene-2023) y AMDA/Jato (2020); 2023: AMDA con datos INEGI (1,361,433); 2024 y 2025: RAIAVL dic-2025 (1,504,322 y 1,524,583)."
+  mercado_futuro:            # SUPUESTO: el mercado total se mantiene alrededor del nivel 2025
+    distribucion: uniforme
+    min: 1400000
+    max: 1650000
+  anio_parcial: 2026         # año con meses incompletos: su total se estima con el ritmo de 2025
+  # Participación máxima de largo plazo (s_max) de cada tipo en las ventas totales. SUPUESTOS de escenario:
+  # no se pueden estimar con datos de inicio de curva; se reportan los tres.
+  escenarios_s_max:
+    bajo: {BEV: 0.15, PHEV: 0.05, HEV: 0.15}
+    base: {BEV: 0.30, PHEV: 0.10, HEV: 0.20}
+    alto: {BEV: 0.50, PHEV: 0.15, HEV: 0.25}
+  bootstrap_curva_s: 2000
+  validacion:
+    origenes: 24             # últimos 24 meses como orígenes del backtest
+    horizonte_meses: 12
+    anios_prueba_curva_s: 3  # backtest anual de la curva S: ajusta hasta T-3 y predice 3 años
+
+# ---------------------------------------------------------------- Paso 4: flujo de baterías al fin de vida
+flujo_eol:
+  meses_participacion_entidad: 24
+  densidad_paquete_wh_kg:
+    BEV:  {distribucion: uniforme, min: 130, max: 170}
+    PHEV: {distribucion: uniforme, min: 130, max: 170}
+    HEV:  {distribucion: uniforme, min: 37, max: 80}
+  fuente_densidad: "Battery Design, Battery Pack Database: mediana de BEV 145-167 Wh/kg a nivel paquete (2019-2024); Toyota Prius Gen 2 híbrido 37.2 Wh/kg. Cota alta HEV de 80 Wh/kg = SUPUESTO (paquetes de litio recientes)."
+  anios_reporte: [2030, 2035, 2040]
+
+# ---------------------------------------------------------------- Fase 6: CO2 de ciclo de vida, Monte Carlo y Sobol
+# Unidad funcional: g CO2e por km recorrido, BEV vs auto de gasolina equivalente, en México.
+riesgo:
+  n_monte_carlo: 20000
+  n_sobol: 8192                 # N de Saltelli; evaluaciones = N (k + 2)
+  bootstrap_sobol: 300
+  meses_red: 24                 # intensidad de la red: últimos 24 meses de CENACE
+  entradas:                     # cada una con su rango; las uniformes van a Sobol tal cual
+    bateria_kwh: {min: 35, max: 85, fuente: "IEA GEVO 2025 (BEV ~65 kWh) y Adamas (LFP 38.9 kWh)"}
+    ef_bateria_kg_kwh: {min: 56, max: 100, fuente: "datos/procesado/greet_batpac_parametros.csv: 56 (LFP), 65 y 100 (NMC111, GREET2018), 79 (NMC811)"}
+    reciclaje_credito: {min: 0.0, max: 0.15, fuente: "SUPUESTO: fracción de las emisiones de fabricar la batería evitada por reciclaje"}
+    carroceria_t: {min: 5.0, max: 9.0, fuente: "SUPUESTO: fabricación del vehículo sin batería de tracción (t CO2e), igual para BEV y gasolina; metodología IEA/GREET"}
+    consumo_kwh_km: {min: 0.137, max: 0.200, fuente: "EPA fueleconomy.gov (enchufe a rueda)"}
+    perdidas_red: {min: 0.08, max: 0.15, fuente: "SUPUESTO: pérdidas de transmisión y distribución en México"}
+    km_anio: {min: 8000, max: 20000, fuente: "CCA 2009 (34 km/día ~ 12,400 km/año) y BBVA (15,000-20,000)"}
+    rendimiento_km_l: {min: 10.0, max: 15.0, fuente: "ICCT: 15.5 km/l promedio de laboratorio de autos nuevos 2016; rango bajado por la brecha laboratorio-calle (SUPUESTO)"}
+    ef_gasolina_kg_l: {min: 2.88, max: 2.93, fuente: "GLEC (2019: 2.88; 2025: 2.9304 kg CO2e/l, pozo a rueda)"}
+    p_reemplazo_bateria: {min: 0.0, max: 1.0, fuente: "SUPUESTO: si la batería muere antes que el auto, probabilidad de reemplazarla (si no, el auto se desecha)"}
+    u_vida_bateria: {min: 0.0, max: 1.0, fuente: "cuantil de la vida de batería BEV de la flota (Fase 3, mezcla nacional ponderada por ventas)"}
+    u_vida_vehiculo: {min: 0.0, max: 1.0, fuente: "cuantil de la vida del vehículo (Weibull beta 3, eta 16, SUPUESTO de Fase 3)"}
+    u_red: {min: 0.0, max: 1.0, fuente: "cuantil de la intensidad mensual de la red de CENACE (últimos 24 meses)"}
+  bateria_plomo_icev_t: 0.04
+  fuente_plomo: "IEA, EV Life Cycle Assessment Calculator - Methodology (batería de plomo-ácido del auto de gasolina, 0.04 t CO2e)"

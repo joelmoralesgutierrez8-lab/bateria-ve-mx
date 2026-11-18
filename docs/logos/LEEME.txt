@@ -1,0 +1,11 @@
+Coloca aqui los logotipos OFICIALES (bajalos del sitio del IPN y de tu escuela) con estos nombres:
+
+  ipn.png                    Instituto Politecnico Nacional
+  ciencia_datos.png          Licenciatura en Ciencia de Datos
+  sistemas_automotrices.png  Ingenieria en Sistemas Automotrices
+
+Luego corre:  python -m modelos.generar_extenso
+Los logos se incrustan en docs/extenso_bateria_ve_mx.html (un solo archivo). Si faltan, la portada muestra un recuadro de texto.
+
+Antes de entregar, edita en modelos/generar_extenso.py las variables UNIDAD (campus) y EQUIPO (nombre de tu companero/a),
+y en README.md la seccion Equipo.

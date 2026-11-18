@@ -1,0 +1,7 @@
+# Solo para `python -m etl.descargas vegetacion` (NDVI Landsat vía Planetary Computer)
+pystac-client
+planetary-computer
+odc-stac
+xarray
+rasterio
+dask

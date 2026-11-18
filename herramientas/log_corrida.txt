@@ -1,0 +1,356 @@
+==== INICIO 17/11/2026 23:48:08.56 
+==== [1/8] descargas auxiliares (INEGI, capitales, NASA, CALCE, Oxford, USGS) 
+== inegi
+  FALLÓ inegi: ('Connection broken: IncompleteRead(83670 bytes read, 85976 more expected)', IncompleteRead(83670 bytes read, 85976 more expected))
+== capitales
+  capitales: 33 encontradas en Wikidata, 1 agregadas a puntos_interes.csv
+  OJO: se esperaban 32 (31 estados + CDMX); revisa el archivo.
+== nasa
+  ya existe: datos\crudo\nasa_pcoe\_zip\5_Battery_Data_Set.zip
+  NASA: 38 archivos .mat en datos\crudo\nasa_pcoe
+== calce
+  ya existe: datos\crudo\calce\_zip\CS2_33.zip
+  CALCE CS2_33: 23 archivos
+  ya existe: datos\crudo\calce\_zip\CS2_34.zip
+  CALCE CS2_34: 23 archivos
+  ya existe: datos\crudo\calce\_zip\CS2_35.zip
+  CALCE CS2_35: 25 archivos
+  ya existe: datos\crudo\calce\_zip\CS2_36.zip
+  CALCE CS2_36: 26 archivos
+  ya existe: datos\crudo\calce\_zip\CS2_37.zip
+  CALCE CS2_37: 27 archivos
+  ya existe: datos\crudo\calce\_zip\CS2_38.zip
+  CALCE CS2_38: 28 archivos
+== oxford
+  bajando https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac/files/m5ac36a1e2073852e4f1f7dee647909a7
+  guardado: datos\crudo\oxford\Oxford_Battery_Degradation_Dataset_1.mat (266.2 MB)
+== usgs
+  FALLÓ usgs: USGS/ScienceBase respondió 403 (verificación anti-bots). Descarga los CSV a mano desde https://doi.org/10.5066/P1WKQ63T
+==== [2/8] NASA POWER 
+==== [3/8] verificar 
+WARNING | descargas | FALTA: GREET/BatPaC (plantilla extraída a mano) -> descárgalo de https://greet.anl.gov  |  https://www.anl.gov/cse/batpac-model-software y guárdalo en datos\crudo\greet_batpac\parametros_ciclo_vida.csv
+WARNING | descargas | FALTA: USGS MCS 2026 (CSV) -> descárgalo de https://doi.org/10.5066/P1WKQ63T y guárdalo en datos\crudo\usgs (0 archivos)
+                                          fuente                                                        ruta  presente                                                                         url_oficial
+INEGI RAIAVL (híbridos y eléctricos por entidad)                             datos\crudo\inegi\RAIAVL_11.csv      True https://www.inegi.org.mx/app/tabulados/pxwebv2/pxweb/es/RAIAVL/RAIAVL/RAIAVL_11.px/
+                CENACE generación por tecnología            datos\crudo\cenace\generacion_por_tecnologia.csv      True          https://www.cenace.gob.mx/Paginas/SIM/Reportes/EnergiaGeneradaTipoTec.aspx
+            Oxford Battery Degradation Dataset 1 datos\crudo\oxford\Oxford_Battery_Degradation_Dataset_1.mat      True              https://ora.ox.ac.uk/objects/uuid:03ba4b01-cfed-46d3-9b1a-7d4a7bdf6fac
+        GREET/BatPaC (plantilla extraída a mano)          datos\crudo\greet_batpac\parametros_ciclo_vida.csv     False             https://greet.anl.gov  |  https://www.anl.gov/cse/batpac-model-software
+                           NASA PCoE (B00xx.mat)                         datos\crudo\nasa_pcoe (34 archivos)      True   https://www.nasa.gov/content/prognostics-center-of-excellence-data-set-repository
+                          CALCE (xlsx por celda)                            datos\crudo\calce (152 archivos)      True                                                          https://calce.umd.edu/data
+                             USGS MCS 2026 (CSV)                               datos\crudo\usgs (0 archivos)     False                                                    https://doi.org/10.5066/P1WKQ63T
+==== [4/8] ETL 
+INFO | limpieza | INEGI: último mes con datos = 2026-10; descarté 198 filas posteriores (aún no publicadas)
+INFO | etl | Guardado datos\procesado\inegi_ventas_entidad_mes.csv (12870 filas)
+INFO | etl | Guardado datos\procesado\inegi_ventas_nacional_mes.csv (390 filas)
+WARNING | limpieza | Entidades sin región CENACE (llena config/crosswalk_entidad_region.csv): ['No especificado']
+INFO | etl | Guardado datos\procesado\inegi_ventas_entidad_mes_con_region.csv (12870 filas)
+INFO | etl | Guardado datos\procesado\cenace_generacion_mensual.csv (1386 filas)
+ERROR | etl | cenace_factor_emision_regional: Tecnologías sin factor de emisión: ['combustion interna', 'termica convencional', 'turbo gas']. Agrégalas al CSV de factores.
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+INFO | etl | Guardado datos\procesado\bateria_nasa_pcoe.csv (2769 filas)
+INFO | etl | Guardado datos\procesado\bateria_calce.csv (5686 filas)
+INFO | etl | Guardado datos\procesado\bateria_oxford.csv (519 filas)
+WARNING | etl | AUSENTE greet_batpac_parametros: plantilla vacía: extrae a mano los parámetros de GREET/BatPaC (ver README)
+WARNING | etl | AUSENTE usgs_minerales: sin CSV en datos/crudo/usgs
+INFO | etl | Guardado datos\procesado\nasa_power_temperatura.csv (4320 filas)
+WARNING | etl | AUSENTE vegetacion_ndvi_zonas: ejecuta: python -m etl.descargas vegetacion (requiere config/zonas_mineras.csv)
+C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\etl\ejecutar_etl.py:93: Pandas4Warning: 'str' is not supported as a fill value for float64 dtype. In a future version, calling fillna with an incompatible value will raise. Explicitly cast to a common dtype before filling.
+  (destino.with_suffix(".md")).write_text(t.fillna("").to_markdown(index=False)
+                       dataset            columna  n_filas  n_faltantes  pct_faltantes                                                                                                                                           motivo
+      inegi_ventas_entidad_mes              fecha    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes               anio    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes                mes    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes            entidad    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes               tipo    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes           unidades    12870        114.0           0.89                                                                                                                                              NaN
+      inegi_ventas_entidad_mes        sin_reporte    12870          0.0           0.00                                                                                                                                              NaN
+cenace_factor_emision_regional (dataset completo)        0          NaN            NaN ERROR al procesar: Tecnologías sin factor de emisión: ['combustion interna', 'termica convencional', 'turbo gas']. Agrégalas al CSV de factores.
+             bateria_nasa_pcoe            bateria     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe              ciclo     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe       capacidad_ah     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe    temp_ambiente_c     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe   capacidad_ref_ah     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe                soh     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe             fuente     2769          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce            bateria     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce              ciclo     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce       capacidad_ah     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce   capacidad_ref_ah     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce                soh     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce             fuente     5686          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford            bateria      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford              ciclo      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford       capacidad_ah      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford    temp_ambiente_c      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford   capacidad_ref_ah      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford                soh      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford             fuente      519          0.0           0.00                                                                                                                                              NaN
+       greet_batpac_parametros (dataset completo)        0          NaN            NaN                                                                       plantilla vacía: extrae a mano los parámetros de GREET/BatPaC (ver README)
+                usgs_minerales (dataset completo)        0          NaN            NaN                                                                                                                      sin CSV en datos/crudo/usgs
+        nasa_power_temperatura                 id     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura              fecha     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura                T2M     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura            T2M_MAX     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura            T2M_MIN     4320          0.0           0.00                                                                                                                                              NaN
+         vegetacion_ndvi_zonas (dataset completo)        0          NaN            NaN                                                                  ejecuta: python -m etl.descargas vegetacion (requiere config/zonas_mineras.csv)INFO | etl | Guardado datos\procesado\cobertura_por_entidad.csv (33 filas)
+
+==== [5/8] pruebas 
+test_calce_encadena_ciclos (test_etl_sintetico.TestBaterias.test_calce_encadena_ciclos) ... ok
+test_nasa_mat_real_roundtrip (test_etl_sintetico.TestBaterias.test_nasa_mat_real_roundtrip)
+Escribe un .mat con la estructura B0005.cycle(i).{type,ambient_temperature,data.Capacity} y lo lee. ... ok
+test_oxford (test_etl_sintetico.TestBaterias.test_oxford) ... ok
+test_soh_nasa (test_etl_sintetico.TestBaterias.test_soh_nasa) ... ok
+test_columnas_incorrectas_fallan (test_etl_sintetico.TestCenace.test_columnas_incorrectas_fallan) ... ok
+test_factor_implicito (test_etl_sintetico.TestCenace.test_factor_implicito) ... ok
+test_tecnologia_sin_factor_falla (test_etl_sintetico.TestCenace.test_tecnologia_sin_factor_falla) ... ok
+test_formato_ancho (test_etl_sintetico.TestInegi.test_formato_ancho) ... INFO | limpieza | INEGI: último mes con datos = 2024-02; descarté 0 filas posteriores (aún no publicadas)
+ok
+test_formato_largo_y_meses_no_publicados (test_etl_sintetico.TestInegi.test_formato_largo_y_meses_no_publicados) ... INFO | limpieza | INEGI: último mes con datos = 2025-02; descarté 2 filas posteriores (aún no publicadas)
+ok
+test_region_sin_mapa_deja_nan (test_etl_sintetico.TestInegi.test_region_sin_mapa_deja_nan) ... INFO | limpieza | INEGI: último mes con datos = 2025-02; descarté 2 filas posteriores (aún no publicadas)
+WARNING | limpieza | Entidades sin región CENACE (llena config/crosswalk_entidad_region.csv): ['Puebla']
+ok
+test_ventas_negativas_fallan (test_etl_sintetico.TestInegi.test_ventas_negativas_fallan) ... ok
+test_greet_exige_trazabilidad (test_etl_sintetico.TestOtros.test_greet_exige_trazabilidad) ... ok
+test_ndvi_fuera_de_rango (test_etl_sintetico.TestOtros.test_ndvi_fuera_de_rango) ... ok
+test_power_parser (test_etl_sintetico.TestOtros.test_power_parser) ... ok
+test_usgs_filtra_minerales (test_etl_sintetico.TestOtros.test_usgs_filtra_minerales) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.277s
+
+OK
+==== [6/8] instalar dependencias de NDVI 
+Requirement already satisfied: pystac-client in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 2)) (0.9.1)
+Requirement already satisfied: planetary-computer in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 3)) (1.0.0)
+Requirement already satisfied: odc-stac in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 4)) (0.5.3)
+Requirement already satisfied: xarray in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 5)) (2026.9.0)
+Requirement already satisfied: rasterio in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 6)) (1.5.2)
+Requirement already satisfied: dask in .\.venv\Lib\site-packages (from -r requirements-stac.txt (line 7)) (2026.8.0)
+Requirement already satisfied: requests>=2.28.2 in .\.venv\Lib\site-packages (from pystac-client->-r requirements-stac.txt (line 2)) (2.34.2)
+Requirement already satisfied: pystac>=1.10.0 in .\.venv\Lib\site-packages (from pystac-client->-r requirements-stac.txt (line 2)) (1.16.0)
+Requirement already satisfied: python-dateutil>=2.8.2 in .\.venv\Lib\site-packages (from pystac-client->-r requirements-stac.txt (line 2)) (4.0.0)
+Requirement already satisfied: click>=7.1 in .\.venv\Lib\site-packages (from planetary-computer->-r requirements-stac.txt (line 3)) (8.5.1)
+Requirement already satisfied: pydantic>=1.7.3 in .\.venv\Lib\site-packages (from planetary-computer->-r requirements-stac.txt (line 3)) (2.14.3)
+Requirement already satisfied: pytz>=2020.5 in .\.venv\Lib\site-packages (from planetary-computer->-r requirements-stac.txt (line 3)) (2026.6)
+Requirement already satisfied: packaging in .\.venv\Lib\site-packages (from planetary-computer->-r requirements-stac.txt (line 3)) (26.3)
+Requirement already satisfied: python-dotenv in .\.venv\Lib\site-packages (from planetary-computer->-r requirements-stac.txt (line 3)) (1.2.4)
+Requirement already satisfied: affine in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (3.0.1)
+Requirement already satisfied: odc-geo>=0.5.0 in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (0.5.4)
+Requirement already satisfied: odc-loader>=0.6.4 in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (0.6.5)
+Requirement already satisfied: numpy>=1.20.0 in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (2.5.5)
+Requirement already satisfied: pandas in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (3.1.1)
+Requirement already satisfied: toolz in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (1.2.0)
+Requirement already satisfied: typing-extensions in .\.venv\Lib\site-packages (from odc-stac->-r requirements-stac.txt (line 4)) (4.16.0)
+Requirement already satisfied: pystac-core<2,>=1.15.2 in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.16.0)
+Requirement already satisfied: pystac-ext-classification in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.0.2)
+Requirement already satisfied: pystac-ext-datacube in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.2.2)
+Requirement already satisfied: pystac-ext-eo in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.1.2)
+Requirement already satisfied: pystac-ext-file in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.1.2)
+Requirement already satisfied: pystac-ext-grid in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.1.2)
+Requirement already satisfied: pystac-ext-item-assets in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-label in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.3)
+Requirement already satisfied: pystac-ext-mgrs in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-mlm in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.4.2)
+Requirement already satisfied: pystac-ext-pointcloud in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-projection in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.0.2)
+Requirement already satisfied: pystac-ext-raster in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.1.2)
+Requirement already satisfied: pystac-ext-render in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.0.1)
+Requirement already satisfied: pystac-ext-sar in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-sat in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-scientific in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-storage in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (2.0.2)
+Requirement already satisfied: pystac-ext-table in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.2.2)
+Requirement already satisfied: pystac-ext-timestamps in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.1.2)
+Requirement already satisfied: pystac-ext-version in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.2.2)
+Requirement already satisfied: pystac-ext-view in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: pystac-ext-xarray-assets in .\.venv\Lib\site-packages (from pystac>=1.10.0->pystac-client->-r requirements-stac.txt (line 2)) (1.0.2)
+Requirement already satisfied: attrs in .\.venv\Lib\site-packages (from rasterio->-r requirements-stac.txt (line 6)) (26.1.0)
+Requirement already satisfied: certifi in .\.venv\Lib\site-packages (from rasterio->-r requirements-stac.txt (line 6)) (2026.10.23)
+Requirement already satisfied: pyparsing>=3.0 in .\.venv\Lib\site-packages (from rasterio->-r requirements-stac.txt (line 6)) (3.3.3)
+Requirement already satisfied: cloudpickle>=3.0.0 in .\.venv\Lib\site-packages (from dask->-r requirements-stac.txt (line 7)) (3.1.2)
+Requirement already satisfied: fsspec>=2021.09.0 in .\.venv\Lib\site-packages (from dask->-r requirements-stac.txt (line 7)) (2026.9.0)
+Requirement already satisfied: partd>=1.4.0 in .\.venv\Lib\site-packages (from dask->-r requirements-stac.txt (line 7)) (1.4.2)
+Requirement already satisfied: pyyaml>=5.4.1 in .\.venv\Lib\site-packages (from dask->-r requirements-stac.txt (line 7)) (6.0.3)
+Requirement already satisfied: cachetools in .\.venv\Lib\site-packages (from odc-geo>=0.5.0->odc-stac->-r requirements-stac.txt (line 4)) (8.0.1)
+Requirement already satisfied: pyproj>=3.0.0 in .\.venv\Lib\site-packages (from odc-geo>=0.5.0->odc-stac->-r requirements-stac.txt (line 4)) (3.8.0)
+Requirement already satisfied: shapely>=2.1.0 in .\.venv\Lib\site-packages (from odc-geo>=0.5.0->odc-stac->-r requirements-stac.txt (line 4)) (2.2.0)
+Requirement already satisfied: tzdata in .\.venv\Lib\site-packages (from pandas->odc-stac->-r requirements-stac.txt (line 4)) (2026.6)
+Requirement already satisfied: locket in .\.venv\Lib\site-packages (from partd>=1.4.0->dask->-r requirements-stac.txt (line 7)) (1.0.0)
+Requirement already satisfied: annotated-types>=0.6.0 in .\.venv\Lib\site-packages (from pydantic>=1.7.3->planetary-computer->-r requirements-stac.txt (line 3)) (0.8.0)
+Requirement already satisfied: pydantic-core==2.50.4 in .\.venv\Lib\site-packages (from pydantic>=1.7.3->planetary-computer->-r requirements-stac.txt (line 3)) (2.50.4)
+Requirement already satisfied: typing-inspection>=0.4.4 in .\.venv\Lib\site-packages (from pydantic>=1.7.3->planetary-computer->-r requirements-stac.txt (line 3)) (0.4.5)
+Requirement already satisfied: charset_normalizer<4,>=2 in .\.venv\Lib\site-packages (from requests>=2.28.2->pystac-client->-r requirements-stac.txt (line 2)) (3.5.2)
+Requirement already satisfied: idna<4,>=2.5 in .\.venv\Lib\site-packages (from requests>=2.28.2->pystac-client->-r requirements-stac.txt (line 2)) (3.20)
+Requirement already satisfied: urllib3<3,>=1.26 in .\.venv\Lib\site-packages (from requests>=2.28.2->pystac-client->-r requirements-stac.txt (line 2)) (2.8.0)
+==== [7/8] NDVI Landsat 
+INFO | rasterio._env | GDAL signalled an error: err_no=4, msg="`/vsicurl/https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2022/034/039/LC09_L2SP_034039_20220801_20220803_02_T1/LC09_L2SP_034039_20220801_20220803_02_T1_SR_B5.TIF?st=2026-11-17T05%3A53%3A45Z&se=2026-11-18T06%3A38%3A45Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-18T04%3A54%3A45Z&ske=2026-11-25T04%3A54%3A45Z&sks=b&skv=2025-07-05&sig=YHJ13xBfqegiz712dtt8E9nxaE6SlRcwU9V/2/ZfuTU%3D' not recognized as being in a supported file format."
+ERROR | odc.loader._rio | Failed to load https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2022/034/039/LC09_L2SP_034039_20220801_20220803_02_T1/LC09_L2SP_034039_20220801_20220803_02_T1_SR_B5.TIF?st=2026-11-17T05%3A53%3A45Z&se=2026-11-18T06%3A38%3A45Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-18T04%3A54%3A45Z&ske=2026-11-25T04%3A54%3A45Z&sks=b&skv=2025-07-05&sig=YHJ13xBfqegiz712dtt8E9nxaE6SlRcwU9V/2/ZfuTU%3D:1 due to rasterio error: ''/vsicurl/https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2022/034/039/LC09_L2SP_034039_20220801_20220803_02_T1/LC09_L2SP_034039_20220801_20220803_02_T1_SR_B5.TIF?st=2026-11-17T05%3A53%3A45Z&se=2026-11-18T06%3A38%3A45Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-18T04%3A54%3A45Z&ske=2026-11-25T04%3A54%3A45Z&sks=b&skv=2025-07-05&sig=YHJ13xBfqegiz712dtt8E9nxaE6SlRcwU9V/2/ZfuTU%3D' not recognized as being in a supported file format.'
+Traceback (most recent call last):
+  File "rasterio/_base.pyx", line 322, in rasterio._base.DatasetBase.__init__
+    self._hds = open_dataset(
+  File "rasterio/_base.pyx", line 234, in rasterio._base.open_dataset
+    return exc_wrap_pointer(hds)
+  File "rasterio/_err.pyx", line 359, in rasterio._err.exc_wrap_pointer
+    raise exc
+rasterio._err.CPLE_OpenFailedError: '/vsicurl/https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2022/034/039/LC09_L2SP_034039_20220801_20220803_02_T1/LC09_L2SP_034039_20220801_20220803_02_T1_SR_B5.TIF?st=2026-11-17T05%3A53%3A45Z&se=2026-11-18T06%3A38%3A45Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-18T04%3A54%3A45Z&ske=2026-11-25T04%3A54%3A45Z&sks=b&skv=2025-07-05&sig=YHJ13xBfqegiz712dtt8E9nxaE6SlRcwU9V/2/ZfuTU%3D' not recognized as being in a supported file format.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\etl\descargas.py", line 170, in <module>
+    descargar_vegetacion(cfg)
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\etl\descargas.py", line 110, in descargar_vegetacion
+    "ndvi_mediana": ndvi_mediana_anual([z["oeste"], z["sur"], z["este"], z["norte"]], a, v)}
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\etl\descargas.py", line 91, in ndvi_mediana_anual
+    ds = odc.stac.load(items, bands=["red", "nir08", "qa_pixel"], bbox=bbox, crs="EPSG:4326",
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\stac\_stac_load.py", line 509, in load
+    chunked_load(
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 682, in chunked_load
+    return direct_chunked_load(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 945, in direct_chunked_load
+    for _ in _work:
+             ^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_utils.py", line 44, in pmap
+    yield from map(func, inputs)
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 920, in _do_one
+    _ = _fill_nd_slice(
+        ^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 570, in _fill_nd_slice
+    return fuse_nd_slices(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 536, in fuse_nd_slices
+    for yx_roi, pix in srcs:
+                       ^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_builder.py", line 571, in <genexpr>
+    (src.read(cfg, dst_gbox, selection=selection) for src in srcs),
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_rio.py", line 146, in read
+    return rio_read(self._src, cfg, dst_geobox, dst=dst, selection=selection)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_rio.py", line 579, in rio_read
+    raise e
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_rio.py", line 562, in rio_read
+    _rio_read(src, cfg, dst_geobox, prep_dst(dst), selection=selection)
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\odc\loader\_rio.py", line 610, in _rio_read
+    with rasterio.open(src.uri, "r", sharing=False) as rdr:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\rasterio\env.py", line 464, in wrapper
+    return f(*args, **kwds)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\.venv\Lib\site-packages\rasterio\__init__.py", line 379, in open
+    dataset = DatasetReader(path, driver=driver, sharing=sharing, thread_safe=thread_safe, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "rasterio/_base.pyx", line 331, in rasterio._base.DatasetBase.__init__
+    raise RasterioIOError(str(err))
+rasterio.errors.RasterioIOError: '/vsicurl/https://landsateuwest.blob.core.windows.net/landsat-c2/level-2/standard/oli-tirs/2022/034/039/LC09_L2SP_034039_20220801_20220803_02_T1/LC09_L2SP_034039_20220801_20220803_02_T1_SR_B5.TIF?st=2026-11-17T05%3A53%3A45Z&se=2026-11-18T06%3A38%3A45Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-18T04%3A54%3A45Z&ske=2026-11-25T04%3A54%3A45Z&sks=b&skv=2025-07-05&sig=YHJ13xBfqegiz712dtt8E9nxaE6SlRcwU9V/2/ZfuTU%3D' not recognized as being in a supported file format.
+==== [8/8] ETL final 
+INFO | limpieza | INEGI: último mes con datos = 2026-10; descarté 198 filas posteriores (aún no publicadas)
+INFO | etl | Guardado datos\procesado\inegi_ventas_entidad_mes.csv (12870 filas)
+INFO | etl | Guardado datos\procesado\inegi_ventas_nacional_mes.csv (390 filas)
+WARNING | limpieza | Entidades sin región CENACE (llena config/crosswalk_entidad_region.csv): ['No especificado']
+INFO | etl | Guardado datos\procesado\inegi_ventas_entidad_mes_con_region.csv (12870 filas)
+INFO | etl | Guardado datos\procesado\cenace_generacion_mensual.csv (1386 filas)
+ERROR | etl | cenace_factor_emision_regional: Tecnologías sin factor de emisión: ['combustion interna', 'termica convencional', 'turbo gas']. Agrégalas al CSV de factores.
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0050): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+WARNING | limpieza | NASA PCoE (B0052): ciclo discharge con Capacity vacío omitido
+INFO | etl | Guardado datos\procesado\bateria_nasa_pcoe.csv (2769 filas)
+INFO | etl | Guardado datos\procesado\bateria_calce.csv (5686 filas)
+INFO | etl | Guardado datos\procesado\bateria_oxford.csv (519 filas)
+WARNING | etl | AUSENTE greet_batpac_parametros: plantilla vacía: extrae a mano los parámetros de GREET/BatPaC (ver README)
+WARNING | etl | AUSENTE usgs_minerales: sin CSV en datos/crudo/usgs
+INFO | etl | Guardado datos\procesado\nasa_power_temperatura.csv (4320 filas)
+WARNING | etl | AUSENTE vegetacion_ndvi_zonas: ejecuta: python -m etl.descargas vegetacion (requiere config/zonas_mineras.csv)
+C:\Users\cuito\OneDrive\Documentos\Etica\bateria_ve_mx_fases_1_2\bateria_ve_mx\etl\ejecutar_etl.py:93: Pandas4Warning: 'str' is not supported as a fill value for float64 dtype. In a future version, calling fillna with an incompatible value will raise. Explicitly cast to a common dtype before filling.
+  (destino.with_suffix(".md")).write_text(t.fillna("").to_markdown(index=False)
+                       dataset            columna  n_filas  n_faltantes  pct_faltantes                                                                                                                                           motivo
+      inegi_ventas_entidad_mes              fecha    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes               anio    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes                mes    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes            entidad    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes               tipo    12870          0.0           0.00                                                                                                                                              NaN
+      inegi_ventas_entidad_mes           unidades    12870        114.0           0.89                                                                                                                                              NaN
+      inegi_ventas_entidad_mes        sin_reporte    12870          0.0           0.00                                                                                                                                              NaN
+cenace_factor_emision_regional (dataset completo)        0          NaN            NaN ERROR al procesar: Tecnologías sin factor de emisión: ['combustion interna', 'termica convencional', 'turbo gas']. Agrégalas al CSV de factores.
+             bateria_nasa_pcoe            bateria     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe              ciclo     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe       capacidad_ah     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe    temp_ambiente_c     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe   capacidad_ref_ah     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe                soh     2769          0.0           0.00                                                                                                                                              NaN
+             bateria_nasa_pcoe             fuente     2769          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce            bateria     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce              ciclo     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce       capacidad_ah     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce   capacidad_ref_ah     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce                soh     5686          0.0           0.00                                                                                                                                              NaN
+                 bateria_calce             fuente     5686          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford            bateria      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford              ciclo      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford       capacidad_ah      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford    temp_ambiente_c      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford   capacidad_ref_ah      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford                soh      519          0.0           0.00                                                                                                                                              NaN
+                bateria_oxford             fuente      519          0.0           0.00                                                                                                                                              NaN
+       greet_batpac_parametros (dataset completo)        0          NaN            NaN                                                                       plantilla vacía: extrae a mano los parámetros de GREET/BatPaC (ver README)
+                usgs_minerales (dataset completo)        0          NaN            NaN                                                                                                                      sin CSV en datos/crudo/usgs
+        nasa_power_temperatura                 id     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura              fecha     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura                T2M     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura            T2M_MAX     4320          0.0           0.00                                                                                                                                              NaN
+        nasa_power_temperatura            T2M_MIN     4320          0.0           0.00                                                                                                                                              NaN
+         vegetacion_ndvi_zonas (dataset completo)        0          NaN            NaN                                                                  ejecuta: python -m etl.descargas vegetacion (requiere config/zonas_mineras.csv)INFO | etl | Guardado datos\procesado\cobertura_por_entidad.csv (33 filas)
+
+==== FIN 18/11/2026  0:08:10.29 

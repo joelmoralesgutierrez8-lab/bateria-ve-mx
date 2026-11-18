@@ -1,0 +1,11 @@
+# Núcleo del ETL (Fases 1-2). Versiones mínimas probadas con Python 3.12; fija las tuyas con `pip freeze > requirements.lock`.
+pandas>=2.2
+numpy>=1.26
+pyyaml>=6.0
+requests>=2.31
+scipy>=1.11
+openpyxl>=3.1
+tabulate>=0.9
+# Opcional: Oxford en formato MATLAB v7.3
+mat73>=0.60
+# Fases siguientes (se usarán después): statsmodels, prophet, torch, SALib, geopandas, matplotlib

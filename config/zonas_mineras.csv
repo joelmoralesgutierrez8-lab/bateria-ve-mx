@@ -1,0 +1,4 @@
+nombre,oeste,sur,este,norte,fuente_bbox
+mina_li_bacadehuachi,-109.20396,29.65326,-109.10396,29.75326,"Recuadro de ±0.05° (~5 km) alrededor del punto de referencia; NO es el polígono de la concesión. Punto: DOF 2023-02-18, Decreto reserva minera de litio, Punto de Partida 29°42'11.7414""N 109°09'14.2466""O (https://sidof.segob.gob.mx/notas/docFuente/5680091)"
+mina_mn_molango,-98.73781,20.90886,-98.63781,21.00886,"Recuadro de ±0.05° (~5 km) alrededor del punto de referencia; NO es el polígono de la concesión. Punto: Mineral Resource Map (USGS MRDS), registro Molangotetzintla/Acuatitla (https://mineralresourcemap.com/detail/10133142)"
+mina_cu_cananea,-110.38139,30.91056,-110.28139,31.01056,"Recuadro de ±0.05° (~5 km) alrededor del punto de referencia; NO es el polígono de la concesión. Punto: Wikipedia, Buenavista mine, 30°57'38""N 110°19'53""O (https://en.wikipedia.org/wiki/Buenavista_mine)"

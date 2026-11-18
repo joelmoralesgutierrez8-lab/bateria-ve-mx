@@ -1,0 +1,21 @@
+{
+  "beta": 7.426438435419771,
+  "eta": {
+    "calce": 546.9219955107712,
+    "nasa_pcoe": 107.58632019689524,
+    "oxford": 7469.696693303926
+  },
+  "log_verosimilitud": -87.17971057031684,
+  "convergio": true,
+  "prueba_lr": {
+    "estadistico_lr": 4.697108188929832,
+    "grados_libertad": 2,
+    "p_valor": 0.09550715675456585,
+    "beta_por_grupo": {
+      "calce": 13.038797733402047,
+      "nasa_pcoe": 4.511634221954221,
+      "oxford": 8.32259277591504
+    },
+    "beta_comun": 7.426438435419771
+  }
+}

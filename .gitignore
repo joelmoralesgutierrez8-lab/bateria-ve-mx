@@ -1,0 +1,55 @@
+# --- Entorno y cachés de Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# --- Archivos pesados / comprimidos ---
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.gz
+*.mat
+*.npz
+*.npy
+*.parquet
+*.h5
+*.pt
+*.pth
+*.tif
+*.tiff
+*.nc
+
+# --- Datos locales (se reproducen con python -m etl.descargas y etl.ejecutar_etl) ---
+datos/crudo/*/*
+!datos/crudo/*/.gitkeep
+!datos/crudo/cenace/factores_emision_por_tecnologia.csv
+!datos/crudo/greet_batpac/parametros_ciclo_vida.csv
+datos/procesado/*
+!datos/procesado/.gitkeep
+
+# --- Copias de respaldo y temporales ---
+_to_delete/
+Claude outputs/
+*.bak
+*.tmp
+~$*
+
+# --- Sistema y editores ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# --- Secretos ---
+.env
+*.pem
+*token*
