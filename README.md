@@ -109,6 +109,39 @@ vida del vehículo (0.23). La red eléctrica pesa entre escenarios (reducción d
 - **NDVI sin zonas de control ni lluvia**: la tendencia no prueba que la mina sea la causa.
 - **No existen datos públicos de baterías retiradas en México**: el resultado final es un escenario, no un pronóstico puntual.
 
+## API local y acceso por hotspot
+
+Una API de **solo lectura** sirve los resultados en JSON (`api/servidor.py`, solo biblioteca estándar + pandas; no hay que instalar nada más). Sirve exclusivamente archivos de `resultados/`.
+
+```powershell
+python -m api.servidor            # escucha en todas las interfaces, puerto 8000
+python -m api.servidor --local    # solo esta computadora
+```
+
+Al arrancar imprime dos direcciones: una para esta PC (`http://127.0.0.1:8000/resumen`) y otra para otros equipos (`http://<IP-de-tu-PC>:8000/resumen`).
+
+**Usarla con el hotspot del celular**
+
+1. Activa el hotspot en el celular y conecta la PC a esa red.
+2. Corre `python -m api.servidor`. Si Windows pregunta por el Firewall, permite solo **redes privadas**.
+3. Con otro dispositivo conectado al mismo hotspot (tablet, otro celular, la laptop de tu compañero), abre la dirección que imprimió la terminal. Si no aparece la IP, usa `ipconfig` y busca la "Dirección IPv4" del adaptador Wi-Fi.
+4. Detén el servidor con `Ctrl+C` al terminar.
+
+| Ruta | Qué devuelve |
+|---|---|
+| `/resumen` | Cifras clave: CO₂ por km, equilibrio, toneladas retiradas |
+| `/retiros?anio=2035&escenario=base&tipo=BEV` | Baterías que salen de vehículos (unidades, MWh, toneladas, P5/P50/P95) |
+| `/ventas?tipo=BEV&anio=2030` | Proyección de ventas a 2040 por escenario |
+| `/vida-flota?entidad=Yucatán&tipo=BEV` | Weibull de flota y vida de batería por estado |
+| `/co2`, `/escenarios-red`, `/sobol`, `/ndvi` | Resultados de CO₂ Monte Carlo, escenarios de red, Sobol y NDVI |
+| `/figuras/8_sobol.png` | Las figuras del proyecto |
+
+```powershell
+curl "http://127.0.0.1:8000/retiros?anio=2035&escenario=base"
+```
+
+> **Seguridad:** el servidor no tiene contraseña. Úsalo solo en tu hotspot o red privada, no en Wi-Fi pública, y cierra el servidor al terminar. No es un servicio de producción.
+
 ## Reproducir
 
 ```powershell
@@ -143,6 +176,7 @@ etl/                    descarga y limpieza
 modelos/                código por fase + config_fase3.yaml (todos los supuestos con fuente)
 resultados/fase3..7/    tablas de cada fase · resultados/figuras/ las 8 gráficas
 docs/                   extenso HTML, plantilla, logos/ (coloca aquí los logotipos oficiales)
+api/                    API de solo lectura (python -m api.servidor)
 tests/                  39 pruebas
 ```
 
