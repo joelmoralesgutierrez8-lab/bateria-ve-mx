@@ -154,5 +154,4 @@ URLs oficiales y fechas de descarga en `config/fichas.yaml` y `datos/manifiesto_
 
 ## Equipo
 
-- **Sofía del Carmen Peña Ramírez**, Licenciatura en Ciencia de Datos: datos, modelos y análisis estadístico.
-- *[Nombre del integrante]*, Ingeniería en Sistemas Automotrices: lectura técnica del vehículo y la batería.
+- **Joel Morales Gutierrez**

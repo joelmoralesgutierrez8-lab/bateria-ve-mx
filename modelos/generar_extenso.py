@@ -31,8 +31,7 @@ DOCS = RAIZ / "docs"
 # ------------------------------------------------------------------ datos de portada (EDITAR)
 UNIDAD = "Campus Puebla"
 EQUIPO = [
-    ("Sofía del Carmen Peña Ramírez", "Licenciatura en Ciencia de Datos", "datos, modelos y análisis estadístico"),
-    ("[Nombre del integrante]", "Ingeniería en Sistemas Automotrices", "lectura técnica del vehículo y la batería"),
+    ("Joel Morales Gutierrez", "Proyecto interdisciplinario", "Ciencia de Datos e Ingeniería en Sistemas Automotrices"),
 ]
 MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre",
          "noviembre", "diciembre"]
