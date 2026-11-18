@@ -109,39 +109,6 @@ vida del vehículo (0.23). La red eléctrica pesa entre escenarios (reducción d
 - **NDVI sin zonas de control ni lluvia**: la tendencia no prueba que la mina sea la causa.
 - **No existen datos públicos de baterías retiradas en México**: el resultado final es un escenario, no un pronóstico puntual.
 
-## API local y acceso por hotspot
-
-Una API de **solo lectura** sirve los resultados en JSON (`api/servidor.py`, solo biblioteca estándar + pandas; no hay que instalar nada más). Sirve exclusivamente archivos de `resultados/`.
-
-```powershell
-python -m api.servidor            # escucha en todas las interfaces, puerto 8000
-python -m api.servidor --local    # solo esta computadora
-```
-
-Al arrancar imprime dos direcciones: una para esta PC (`http://127.0.0.1:8000/resumen`) y otra para otros equipos (`http://<IP-de-tu-PC>:8000/resumen`).
-
-**Usarla con el hotspot del celular**
-
-1. Activa el hotspot en el celular y conecta la PC a esa red.
-2. Corre `python -m api.servidor`. Si Windows pregunta por el Firewall, permite solo **redes privadas**.
-3. Con otro dispositivo conectado al mismo hotspot (tablet, otro celular, la laptop de tu compañero), abre la dirección que imprimió la terminal. Si no aparece la IP, usa `ipconfig` y busca la "Dirección IPv4" del adaptador Wi-Fi.
-4. Detén el servidor con `Ctrl+C` al terminar.
-
-| Ruta | Qué devuelve |
-|---|---|
-| `/resumen` | Cifras clave: CO₂ por km, equilibrio, toneladas retiradas |
-| `/retiros?anio=2035&escenario=base&tipo=BEV` | Baterías que salen de vehículos (unidades, MWh, toneladas, P5/P50/P95) |
-| `/ventas?tipo=BEV&anio=2030` | Proyección de ventas a 2040 por escenario |
-| `/vida-flota?entidad=Yucatán&tipo=BEV` | Weibull de flota y vida de batería por estado |
-| `/co2`, `/escenarios-red`, `/sobol`, `/ndvi` | Resultados de CO₂ Monte Carlo, escenarios de red, Sobol y NDVI |
-| `/figuras/8_sobol.png` | Las figuras del proyecto |
-
-```powershell
-curl "http://127.0.0.1:8000/retiros?anio=2035&escenario=base"
-```
-
-> **Seguridad:** el servidor no tiene contraseña. Úsalo solo en tu hotspot o red privada, no en Wi-Fi pública, y cierra el servidor al terminar. No es un servicio de producción.
-
 ## Reproducir
 
 ```powershell
@@ -162,6 +129,7 @@ python -m modelos.ejecutar_riesgo                        # CO2 Monte Carlo y Sob
 python -m modelos.ejecutar_etica                         # NDVI y reparto de emisiones
 python -m modelos.ejecutar_figuras                       # 8 figuras en resultados/figuras/
 python -m modelos.generar_extenso                        # docs/extenso_bateria_ve_mx.html
+python -m modelos.generar_api_estatica                   # api-estatica/*.json
 ```
 
 Reglas del proyecto: Python reproducible, semilla `42`, rutas relativas, ningún dato inventado, intervalos de
@@ -176,7 +144,8 @@ etl/                    descarga y limpieza
 modelos/                código por fase + config_fase3.yaml (todos los supuestos con fuente)
 resultados/fase3..7/    tablas de cada fase · resultados/figuras/ las 8 gráficas
 docs/                   extenso HTML, plantilla, logos/ (coloca aquí los logotipos oficiales)
-api/                    API de solo lectura (python -m api.servidor)
+index.html              página de entrada para hosting (tablero + endpoints)
+api-estatica/           API estática: JSON generados desde resultados/
 tests/                  39 pruebas
 ```
 
@@ -189,3 +158,55 @@ URLs oficiales y fechas de descarga en `config/fichas.yaml` y `datos/manifiesto_
 ## Equipo
 
 - **Joel Morales Gutierrez**
+
+### Página en vivo y API estática
+
+La raíz del repositorio es un sitio estático: `index.html` es la página de entrada y `api-estatica/` contiene los datos en JSON. No hay servidor ni base de datos.
+
+| | Enlace |
+|---|---|
+| **Página (raw.githack, en vivo)** | https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/index.html |
+| **Extenso técnico** | https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/docs/extenso_bateria_ve_mx.html |
+| **Datos (índice JSON)** | https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/api-estatica/index.json |
+| **GitHub Pages** (si se activa, ver abajo) | https://joelmoralesgutierrez8-lab.github.io/bateria-ve-mx/ |
+
+**Datos para conectarlo a un host (Vercel, Netlify, Render, Cloudflare Pages, GitHub Pages)**
+
+| Campo | Valor |
+|---|---|
+| Repositorio Git (URL) | `https://github.com/joelmoralesgutierrez8-lab/bateria-ve-mx` |
+| Rama (Branch) | `main` |
+| Framework Preset | `Other` / `Static HTML` |
+| Root Directory / Publish Directory | `./` (la raíz) |
+| Build Command | *(vacío)* |
+| Archivo de entrada | `index.html` |
+
+*GitHub Pages:* Settings, luego Pages, luego Source = *Deploy from a branch*, Branch = `main`, carpeta `/ (root)`. El archivo `.nojekyll` ya está incluido.
+
+**Endpoints de la API estática** (GET, JSON de solo lectura; base `https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/api-estatica/`)
+
+| Endpoint | Contenido |
+|---|---|
+| `resumen.json` | Cifras clave: CO₂ por km, equilibrio, toneladas retiradas |
+| `retiros.json` | Baterías retiradas 2016–2040 (unidades, MWh, toneladas; P5/P50/P95; escenarios) |
+| `ventas.json` | Proyección de ventas BEV/PHEV/HEV por escenario |
+| `vida-flota.json` | Weibull de flota y vida de batería por estado |
+| `weibull.json` | Weibull de laboratorio con censura |
+| `co2.json` · `escenarios-red.json` · `sobol.json` · `ndvi.json` | CO₂ Monte Carlo, escenarios de red, Sobol, NDVI |
+| `retiros-por-clima.json` | Toneladas 2035 por estado frente a su clima |
+
+```js
+const base = "https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/";
+const datos = await (await fetch(base + "api-estatica/resumen.json")).json();
+console.log(datos.co2_g_km.reduccion_pct_p50);   // 45.4
+```
+
+**Incrustarla en otra página web (`<iframe>`)**
+
+```html
+<iframe src="https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/index.html"
+        width="100%" height="720" style="border:0" loading="lazy"
+        title="Baterías de VE en México"></iframe>
+```
+
+Notas: el repositorio debe ser **público** para que raw.githack funcione. Los enlaces de raw.githack con `/main/` son de desarrollo y se actualizan solos (pueden tardar unos minutos tras un push); para uno fijo usa el enlace de producción de raw.githack con el hash del commit. Después de cambiar resultados, corre `python -m modelos.generar_api_estatica` y vuelve a hacer push.

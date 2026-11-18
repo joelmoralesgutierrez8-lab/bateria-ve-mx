@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baterías de VE en México · Resultados y API estática</title>
+<meta name="description" content="Modelo de pronóstico y reciclaje de baterías de vehículos eléctricos en México (2016-2040). Resultados, extenso técnico y datos en JSON.">
+<style>
+:root{--guinda:#6c1d45;--claro:#f6eef2;--borde:#dedcd6;--tinta:#16151a;--tinta2:#4d4b52}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--tinta);background:#fcfcfb;line-height:1.6}
+header{background:linear-gradient(135deg,var(--guinda),#4a1230);color:#fff;padding:36px 20px 40px}
+.w{max-width:960px;margin:0 auto;padding:0 20px}
+header .w{padding:0}
+h1{margin:8px 0 6px;font-size:2rem;line-height:1.2}
+header p{margin:0;opacity:.9;max-width:760px}
+.ins{font-weight:700;letter-spacing:.02em}
+main{padding:10px 0 60px}
+h2{color:var(--guinda);border-bottom:3px solid var(--guinda);padding-bottom:6px;margin:38px 0 14px;font-size:1.35rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px}
+.kpi{background:#fff;border:1px solid var(--borde);border-radius:10px;padding:14px 16px}
+.kpi b{display:block;font-size:1.8rem;color:var(--guinda);line-height:1.1}
+.kpi span{font-size:.85rem;color:var(--tinta2)}
+.btn{display:inline-block;background:var(--guinda);color:#fff;text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;margin:6px 8px 6px 0}
+.btn.sec{background:#fff;color:var(--guinda);border:2px solid var(--guinda)}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:.92rem}
+th{background:var(--claro);color:var(--guinda);text-align:left;padding:8px 10px;border-bottom:2px solid var(--guinda)}
+td{padding:7px 10px;border-bottom:1px solid var(--borde);vertical-align:top}
+code,pre{font-family:Consolas,"Cascadia Mono",Menlo,monospace}
+code{background:#f3f2ef;padding:.08em .35em;border-radius:4px;font-size:.9em}
+pre{background:#1f1d24;color:#f3f2ef;padding:14px 16px;border-radius:8px;overflow:auto;font-size:.85rem;position:relative}
+pre code{background:none;color:inherit;padding:0;font-size:inherit}
+pre button{position:absolute;top:8px;right:8px;background:#fff;color:var(--guinda);border:0;border-radius:6px;padding:4px 10px;cursor:pointer;font-weight:600}
+.nota{font-size:.85rem;color:var(--tinta2)}
+.fig{width:100%;border:1px solid var(--borde);border-radius:10px;background:#fff}
+.rej{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.rej{grid-template-columns:1fr}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <div class="ins">Instituto Politécnico Nacional · Proyecto interdisciplinario</div>
+  <h1>¿Qué tan limpio es realmente un auto eléctrico en México?</h1>
+  <p>Ciclo de vida de las baterías de vehículos eléctricos, de la mina al reciclaje, y quién paga el costo ambiental. México, 2016–2040. Ciencia de Datos e Ingeniería en Sistemas Automotrices.</p>
+</div></header>
+
+<main><div class="w">
+  <a class="btn" href="docs/extenso_bateria_ve_mx.html">Abrir el extenso técnico</a>
+  <a class="btn sec" href="https://github.com/joelmoralesgutierrez8-lab/bateria-ve-mx">Código en GitHub</a>
+  <a class="btn sec" href="api-estatica/index.json">Datos (JSON)</a>
+
+  <div class="kpis" id="kpis">
+    <div class="kpi"><b id="k1">−45%</b><span>CO₂e por km del eléctrico frente a gasolina (red actual)</span></div>
+    <div class="kpi"><b id="k2">~26,800 km</b><span>para pagar el carbono de fabricar la batería</span></div>
+    <div class="kpi"><b id="k3">99.5%</b><span>de las simulaciones en que el eléctrico emite menos</span></div>
+    <div class="kpi"><b id="k4">38.7 mil t</b><span>de baterías retiradas en 2040 (escenario base)</span></div>
+  </div>
+  <p class="nota">Las cifras se leen de <code>api-estatica/resumen.json</code> cuando la página está en un servidor; si la abres como archivo local se muestran los valores incluidos.</p>
+
+  <h2>Gráficas</h2>
+  <div class="rej">
+    <img class="fig" src="resultados/figuras/2_co2_por_escenario_red.png" alt="CO2 por km por escenario de red" loading="lazy">
+    <img class="fig" src="resultados/figuras/1_toneladas_retiradas.png" alt="Toneladas de baterías retiradas" loading="lazy">
+    <img class="fig" src="resultados/figuras/3_vida_bateria_vs_clima.png" alt="Vida de la batería frente al clima" loading="lazy">
+    <img class="fig" src="resultados/figuras/4_ndvi_minas.png" alt="NDVI en zonas mineras" loading="lazy">
+  </div>
+
+  <h2>Endpoints de la API estática</h2>
+  <p>Son archivos JSON de solo lectura (sin servidor). Se consultan con una petición GET normal desde cualquier página o programa.</p>
+  <table>
+    <thead><tr><th>Endpoint</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><a href="api-estatica/resumen.json"><code>api-estatica/resumen.json</code></a></td><td>Cifras clave: CO₂ por km, equilibrio, toneladas retiradas</td></tr>
+      <tr><td><a href="api-estatica/retiros.json"><code>api-estatica/retiros.json</code></a></td><td>Baterías que salen de vehículos, 2016–2040 (unidades, MWh, toneladas; P5/P50/P95; escenarios bajo/base/alto)</td></tr>
+      <tr><td><a href="api-estatica/ventas.json"><code>api-estatica/ventas.json</code></a></td><td>Proyección de ventas BEV/PHEV/HEV por escenario</td></tr>
+      <tr><td><a href="api-estatica/vida-flota.json"><code>api-estatica/vida-flota.json</code></a></td><td>Weibull de flota y vida de batería por estado</td></tr>
+      <tr><td><a href="api-estatica/weibull.json"><code>api-estatica/weibull.json</code></a></td><td>Weibull de laboratorio con censura (CALCE, NASA, Oxford)</td></tr>
+      <tr><td><a href="api-estatica/co2.json"><code>api-estatica/co2.json</code></a></td><td>CO₂ de ciclo de vida, Monte Carlo (n = 20,000)</td></tr>
+      <tr><td><a href="api-estatica/escenarios-red.json"><code>api-estatica/escenarios-red.json</code></a></td><td>Cuatro escenarios de red eléctrica</td></tr>
+      <tr><td><a href="api-estatica/sobol.json"><code>api-estatica/sobol.json</code></a></td><td>Índices de sensibilidad de Sobol</td></tr>
+      <tr><td><a href="api-estatica/ndvi.json"><code>api-estatica/ndvi.json</code></a></td><td>Tendencias de vegetación en zonas mineras</td></tr>
+      <tr><td><a href="api-estatica/retiros-por-clima.json"><code>api-estatica/retiros-por-clima.json</code></a></td><td>Toneladas 2035 por estado frente a su clima</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Consumir los datos desde otra página</h2>
+<pre><button onclick="copiar(this)">Copiar</button><code id="c1">const base = "https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/";
+const r = await fetch(base + "api-estatica/resumen.json");
+const datos = await r.json();
+console.log(datos.co2_g_km.reduccion_pct_p50);</code></pre>
+
+  <h2>Incrustar esta página en otra (iframe)</h2>
+<pre><button onclick="copiar(this)">Copiar</button><code id="c2">&lt;iframe src="https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/index.html"
+        width="100%" height="720" style="border:0" loading="lazy"
+        title="Baterías de VE en México"&gt;&lt;/iframe&gt;</code></pre>
+  <p class="nota">Para incrustar solo el extenso técnico, cambia <code>index.html</code> por <code>docs/extenso_bateria_ve_mx.html</code>.</p>
+
+  <p class="nota" style="margin-top:36px">Los resultados son escenarios con bandas de incertidumbre, no pronósticos puntuales. Supuestos, fuentes y límites: ver el extenso técnico.</p>
+</div></main>
+
+<script>
+function copiar(b){var t=b.parentNode.querySelector("code").innerText;
+  if(navigator.clipboard){navigator.clipboard.writeText(t);b.textContent="Copiado";setTimeout(function(){b.textContent="Copiar"},1500)}}
+fetch("api-estatica/resumen.json").then(function(r){return r.json()}).then(function(d){
+  var e=function(id,v){document.getElementById(id).textContent=v};
+  e("k1","−"+Math.round(d.co2_g_km.reduccion_pct_p50)+"%");
+  e("k2","~"+d.equilibrio_km_p50.toLocaleString("es-MX")+" km");
+  e("k3",(d.prob_electrico_mas_limpio*100).toFixed(1)+"%");
+  e("k4",(d.toneladas_retiradas_base_p50["2040"]/1000).toFixed(1)+" mil t");
+}).catch(function(){});
+</script>
+</body>
+</html>
