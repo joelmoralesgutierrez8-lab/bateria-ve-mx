@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Baterías de VE en México · Resultados y API estática</title>
-<meta name="description" content="Modelo de pronóstico y reciclaje de baterías de vehículos eléctricos en México (2016-2040). Resultados, extenso técnico y datos en JSON.">
+<title>¿Adónde van las baterías? · Baterías de VE e híbridos en México</title>
+<meta name="description" content="Trazabilidad y gestión del fin de vida de baterías de VE e híbridos en México (2016-2035): bajas por estado, segunda vida, brecha de reciclaje de litio, marco legal y propuesta. Extenso técnico y datos en JSON.">
 <style>
 :root{--guinda:#6c1d45;--claro:#f6eef2;--borde:#dedcd6;--tinta:#16151a;--tinta2:#4d4b52}
 *{box-sizing:border-box}
@@ -39,41 +39,89 @@ pre button{position:absolute;top:8px;right:8px;background:#fff;color:var(--guind
 </head>
 <body>
 <header><div class="w">
-  <div class="ins">Instituto Politécnico Nacional · Proyecto interdisciplinario</div>
-  <h1>¿Qué tan limpio es realmente un auto eléctrico en México?</h1>
-  <p>Ciclo de vida de las baterías de vehículos eléctricos, de la mina al reciclaje, y quién paga el costo ambiental. México, 2016–2040. Ciencia de Datos e Ingeniería en Sistemas Automotrices.</p>
+  <div class="ins">Instituto Politécnico Nacional · Proyecto interdisciplinario · Línea 2: Gestión inteligente de baterías</div>
+  <h1>¿Adónde van las baterías?</h1>
+  <p>Trazabilidad y gestión inteligente del fin de vida de baterías de vehículos eléctricos e híbridos en México, 2016–2035 (horizonte 2040). Ciencia de Datos e Ingeniería en Sistemas Automotrices · Metodología DMAIC.</p>
 </div></header>
 
 <main><div class="w">
   <a class="btn" href="docs/extenso_bateria_ve_mx.html">Abrir el extenso técnico</a>
+  <a class="btn sec" href="https://github.com/joelmoralesgutierrez8-lab/bateria-ve-mx/blob/main/docs/propuesta_mejorada.md">Propuesta</a>
+  <a class="btn sec" href="https://github.com/joelmoralesgutierrez8-lab/bateria-ve-mx/blob/main/docs/marco_regulatorio.md">Marco legal</a>
   <a class="btn sec" href="https://github.com/joelmoralesgutierrez8-lab/bateria-ve-mx">Código en GitHub</a>
   <a class="btn sec" href="api-estatica/index.json">Datos (JSON)</a>
 
   <div class="kpis" id="kpis">
-    <div class="kpi"><b id="k1">−45%</b><span>CO₂e por km del eléctrico frente a gasolina (red actual)</span></div>
-    <div class="kpi"><b id="k2">~26,800 km</b><span>para pagar el carbono de fabricar la batería</span></div>
-    <div class="kpi"><b id="k3">99.5%</b><span>de las simulaciones en que el eléctrico emite menos</span></div>
-    <div class="kpi"><b id="k4">38.7 mil t</b><span>de baterías retiradas en 2040 (escenario base)</span></div>
-    <div class="kpi"><b id="k5">0 t/año</b><span>de reciclaje autorizado para baterías de litio en México (SEMARNAT)</span></div>
-    <div class="kpi"><b id="k6">88%</b><span>de las toneladas retiradas en 2035 aptas para reúso o segunda vida</span></div>
+    <div class="kpi"><b id="k1">11,356 t</b><span>de baterías que saldrán de vehículos en 2035 (39,223 t acumuladas 2026–2035)</span></div>
+    <div class="kpi"><b id="k2">0 t/año</b><span>de reciclaje autorizado para baterías de litio en México (SEMARNAT)</span></div>
+    <div class="kpi"><b id="k3">88%</b><span>de las toneladas retiradas en 2035 aptas para reúso o segunda vida</span></div>
+    <div class="kpi"><b id="k4">56%</b><span>de las toneladas de 2035 en CDMX, Edomex, Jalisco y Nuevo León</span></div>
+    <div class="kpi"><b id="k5">149,031</b><span>híbridos y eléctricos vendidos en 2025 (8,265 en 2016, INEGI)</span></div>
+    <div class="kpi"><b id="k6">−45%</b><span>CO₂e por km del eléctrico frente a gasolina: por qué vale la pena gestionarlas</span></div>
   </div>
-  <p class="nota">Las cifras se leen de <code>api-estatica/resumen.json</code> cuando la página está en un servidor; si la abres como archivo local se muestran los valores incluidos.</p>
+  <p class="nota">Las cifras se leen de <code>api-estatica/resumen.json</code> cuando la página está en un servidor; si la abres como archivo local se muestran los valores incluidos. Escenario base, mediana.</p>
+
+  <h2>El problema</h2>
+  <p><b>Problemática.</b> En México nadie puede decir cuántas baterías de VE e híbridos salen de los vehículos, en qué estado de salud y adónde van. No hay registro público de su salud ni de su destino, el ion-litio está en una zona gris legal y la infraestructura de reciclaje se hizo para plomo-ácido.</p>
+  <p><b>Pregunta guía.</b> ¿Cuántas baterías llegarán al final de su vida en cada estado entre 2026 y 2035, en qué condición, y existe capacidad autorizada para reutilizarlas o reciclarlas?</p>
+  <table>
+    <thead><tr><th>Hipótesis</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td>Las bajas se concentran en pocas entidades</td><td><b>Confirmada.</b> CDMX 3,131 t, Estado de México 1,114 t, Jalisco 1,102 t y Nuevo León 1,031 t en 2035: 56% del total</td></tr>
+      <tr><td>En estados calurosos la batería dura menos</td><td><b>Confirmada en el modelo.</b> BEV: 9.7 años en estados ≥ 24 °C frente a 15.8 en el resto</td></tr>
+      <tr><td>La capacidad de reciclaje autorizada es menor que las bajas</td><td><b>Confirmada y más grave de lo previsto.</b> 0 t/año autorizadas para litio en las 32 entidades</td></tr>
+    </tbody>
+  </table>
+  <p><b>Causa raíz:</b> falta de trazabilidad de la batería desde la venta hasta el desecho.</p>
+
+  <h2>Adónde van las 11,356 t de 2035</h2>
+  <table>
+    <thead><tr><th>Destino</th><th>Toneladas</th></tr></thead>
+    <tbody>
+      <tr><td>Salen con SoH &gt; 80% porque el auto terminó su vida</td><td>5,305 t</td></tr>
+      <tr><td>Segunda vida (SoH 80–70%)</td><td>4,711 t</td></tr>
+      <tr><td>Reciclaje directo (híbridos)</td><td>1,340 t</td></tr>
+    </tbody>
+  </table>
+  <p>La segunda vida no elimina el reciclaje, lo pospone 3–7 años: con adopción total, el reciclaje necesario en 2035 bajaría de 11,356 t a 3,232 t. Aun así, hoy no hay dónde reciclar litio en el país.</p>
 
   <h2>Gráficas</h2>
+  <img class="fig" src="resultados/figuras/9_brecha_reciclaje_estatal.png" alt="Brecha de reciclaje de litio por estado" loading="lazy">
   <div class="rej">
-    <img class="fig" src="resultados/figuras/2_co2_por_escenario_red.png" alt="CO2 por km por escenario de red" loading="lazy">
     <img class="fig" src="resultados/figuras/1_toneladas_retiradas.png" alt="Toneladas de baterías retiradas" loading="lazy">
     <img class="fig" src="resultados/figuras/3_vida_bateria_vs_clima.png" alt="Vida de la batería frente al clima" loading="lazy">
+    <img class="fig" src="resultados/figuras/2_co2_por_escenario_red.png" alt="CO2 por km por escenario de red" loading="lazy">
     <img class="fig" src="resultados/figuras/4_ndvi_minas.png" alt="NDVI en zonas mineras" loading="lazy">
-    <img class="fig" src="resultados/figuras/9_brecha_reciclaje_estatal.png" alt="Brecha de reciclaje de litio por estado" loading="lazy">
   </div>
+
+  <h2>Propuesta de gestión</h2>
+  <ol>
+    <li><b>Responsabilidad extendida del productor para baterías de tracción</b> mediante un acuerdo de la Ley General de Economía Circular (2026), con recolección financiada por armadoras e importadores.</li>
+    <li><b>Pasaporte de batería mexicano</b> vinculado al NIV: química, kWh, SoH al retiro y destino (referente: Reglamento UE 2023/1542, art. 77).</li>
+    <li><b>Incluir el ion-litio en el art. 31 de la LGPGIR</b> o en una NOM específica, para cerrar la zona gris.</li>
+    <li><b>Capacidad de reciclaje de litio</b> priorizada en CDMX, Estado de México, Jalisco y Nuevo León.</li>
+    <li><b>Segunda vida regulada</b> entre 80% y 70% de SoH, para ganar tiempo mientras se construyen plantas.</li>
+    <li><b>Plan para estados calurosos</b> (Sinaloa, Yucatán), donde las baterías se retiran antes.</li>
+  </ol>
+
+  <h2>Plan de trabajo (DMAIC)</h2>
+  <table>
+    <thead><tr><th>Etapa</th><th>Qué se hizo</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Definir</td><td>Problemática, alcance nacional, periodo 2016–2025</td><td>Hecho</td></tr>
+      <tr><td>Medir</td><td>10 fuentes públicas, ETL con SHA-256, fichas y tabla de faltantes</td><td>Hecho</td></tr>
+      <tr><td>Analizar</td><td>Causa raíz, vida útil (Weibull, Arrhenius), ventas, flujo de bajas, SoH, riesgo</td><td>Hecho</td></tr>
+      <tr><td>Mejorar</td><td>Segunda vida, reciclaje retrasado, brecha SEMARNAT, marco legal, propuesta</td><td>Hecho</td></tr>
+      <tr><td>Controlar</td><td>Repositorio, extenso técnico, esta página y la API estática</td><td>Hecho</td></tr>
+    </tbody>
+  </table>
 
   <h2>Endpoints de la API estática</h2>
   <p>Son archivos JSON de solo lectura (sin servidor). Se consultan con una petición GET normal desde cualquier página o programa.</p>
   <table>
     <thead><tr><th>Endpoint</th><th>Contenido</th></tr></thead>
     <tbody>
-      <tr><td><a href="api-estatica/resumen.json"><code>api-estatica/resumen.json</code></a></td><td>Cifras clave: CO₂ por km, equilibrio, toneladas retiradas</td></tr>
+      <tr><td><a href="api-estatica/resumen.json"><code>api-estatica/resumen.json</code></a></td><td>Cifras clave: bajas 2035, Línea 2 (segunda vida, reciclaje de litio, concentración), ventas, CO₂ por km</td></tr>
       <tr><td><a href="api-estatica/retiros.json"><code>api-estatica/retiros.json</code></a></td><td>Baterías que salen de vehículos, 2016–2040 (unidades, MWh, toneladas; P5/P50/P95; escenarios bajo/base/alto)</td></tr>
       <tr><td><a href="api-estatica/ventas.json"><code>api-estatica/ventas.json</code></a></td><td>Proyección de ventas BEV/PHEV/HEV por escenario</td></tr>
       <tr><td><a href="api-estatica/vida-flota.json"><code>api-estatica/vida-flota.json</code></a></td><td>Weibull de flota y vida de batería por estado</td></tr>
@@ -96,7 +144,7 @@ pre button{position:absolute;top:8px;right:8px;background:#fff;color:var(--guind
 <pre><button onclick="copiar(this)">Copiar</button><code id="c1">const base = "https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/";
 const r = await fetch(base + "api-estatica/resumen.json");
 const datos = await r.json();
-console.log(datos.co2_g_km.reduccion_pct_p50);</code></pre>
+console.log(datos.linea2_2035.toneladas_retiradas);   // 11356.2</code></pre>
 
   <h2>Incrustar esta página en otra (iframe)</h2>
 <pre><button onclick="copiar(this)">Copiar</button><code id="c2">&lt;iframe src="https://raw.githack.com/joelmoralesgutierrez8-lab/bateria-ve-mx/main/index.html"
@@ -112,12 +160,14 @@ function copiar(b){var t=b.parentNode.querySelector("code").innerText;
   if(navigator.clipboard){navigator.clipboard.writeText(t);b.textContent="Copiado";setTimeout(function(){b.textContent="Copiar"},1500)}}
 fetch("api-estatica/resumen.json").then(function(r){return r.json()}).then(function(d){
   var e=function(id,v){document.getElementById(id).textContent=v};
-  e("k1","−"+Math.round(d.co2_g_km.reduccion_pct_p50)+"%");
-  e("k2","~"+d.equilibrio_km_p50.toLocaleString("es-MX")+" km");
-  e("k3",(d.prob_electrico_mas_limpio*100).toFixed(1)+"%");
-  e("k4",(d.toneladas_retiradas_base_p50["2040"]/1000).toFixed(1)+" mil t");
-  if(d.linea2_2035){e("k5",d.linea2_2035.reciclaje_litio_autorizado_t_anio.toLocaleString("es-MX")+" t/año");
-    e("k6",Math.round(d.linea2_2035.pct_toneladas_aptas_reuso_o_segunda_vida)+"%");}
+  var f=function(x){return Math.round(x).toLocaleString("es-MX")};
+  var l=d.linea2_2035||{};
+  if(l.toneladas_retiradas!=null)e("k1",f(l.toneladas_retiradas)+" t");
+  if(l.reciclaje_litio_autorizado_t_anio!=null)e("k2",f(l.reciclaje_litio_autorizado_t_anio)+" t/año");
+  if(l.pct_toneladas_aptas_reuso_o_segunda_vida!=null)e("k3",Math.round(l.pct_toneladas_aptas_reuso_o_segunda_vida)+"%");
+  if(l.pct_toneladas_4_entidades_principales!=null)e("k4",Math.round(l.pct_toneladas_4_entidades_principales)+"%");
+  if(d.ventas_2016_2025)e("k5",f(d.ventas_2016_2025["2025"]));
+  e("k6","−"+Math.round(d.co2_g_km.reduccion_pct_p50)+"%");
 }).catch(function(){});
 </script>
 </body>

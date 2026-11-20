@@ -44,7 +44,9 @@ def resumen() -> dict:
     t = {str(a): round(float(base[base.anio == a].toneladas_p50.sum()), 1) for a in (2025, 2030, 2035, 2040)}
     t40 = {e: round(float(re[(re.escenario == e) & (re.anio == 2040)].toneladas_p50.sum()), 1) for e in ("bajo", "base", "alto")}
     return {
-        "proyecto": "Baterías de vehículos eléctricos en México, 2016-2040",
+        "proyecto": "¿Adónde van las baterías? Gestión del fin de vida de baterías de VE e híbridos en México, 2016-2035 (horizonte 2040)",
+        "ventas_2016_2025": ventas(),
+        "toneladas_acumuladas_2026_2035_base_p50": round(float(base[base.anio.between(2026, 2035)].toneladas_p50.sum()), 1),
         "co2_g_km": {"electrico_p50": round(float(mc.loc["bev_g_km", "p50"]), 1),
                      "gasolina_p50": round(float(mc.loc["gas_g_km", "p50"]), 1),
                      "reduccion_pct_p50": round(float(mc.loc["reduccion_pct", "p50"]), 1),
@@ -68,7 +70,21 @@ def linea2() -> dict:
             "reciclaje_litio_autorizado_t_anio": br["reciclaje_litio_t_anio"],
             "reciclaje_plomo_autorizado_t_anio": br["reciclaje_plomo_t_anio"],
             "acopio_litio_autorizaciones": br["acopio_litio_autorizaciones"],
-            "entidades_con_deficit": br["2035"]["entidades_con_deficit"]}
+            "entidades_con_deficit": br["2035"]["entidades_con_deficit"],
+            "toneladas_retiradas": round(sv["toneladas"], 1),
+            "pct_toneladas_4_entidades_principales": pct_top4()}
+
+
+def ventas() -> dict:
+    v = pd.read_csv(RAIZ / "datos/procesado/inegi_ventas_nacional_mes.csv", parse_dates=["fecha"])
+    a = v.groupby(v.fecha.dt.year).unidades.sum()
+    return {"2016": int(round(a.loc[2016])), "2025": int(round(a.loc[2025]))}
+
+
+def pct_top4() -> float:
+    b = pd.read_csv(RES / "brecha/brecha_entidad.csv")
+    b = b[(b.anio == 2035) & (b.entidad != "No especificado")].sort_values("toneladas_p50", ascending=False)
+    return round(float(100 * b.head(4).toneladas_p50.sum() / b.toneladas_p50.sum()), 1)
 
 
 def main() -> None:

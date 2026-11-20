@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Extenso técnico — Ciclo de vida de baterías de vehículos eléctricos en México</title>
+<title>Extenso técnico — ¿Adónde van las baterías? Gestión del fin de vida de baterías de VE e híbridos en México</title>
 @@KATEX@@
 <style>
 :root{
@@ -125,9 +125,11 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
 
 <nav id="indice">
   <div class="marca">Extenso técnico</div>
-  <div class="sub">Baterías de VE en México · 2016–2040</div>
+  <div class="sub">Línea 2 · Baterías de VE e híbridos · México 2016–2035</div>
   <h4>Parte I · Tablero</h4>
   <ol><li><a href="#tablero">Resultados en una página</a></li><li><a href="#figuras">Gráficas principales</a></li></ol>
+  <h4>Planteamiento</h4>
+  <ol>@@INDICE_PLANTEAMIENTO@@</ol>
   <h4>Parte II · Extenso</h4>
   <ol>
     <li><a href="#c1">1 Cómo leer este documento</a></li>
@@ -162,13 +164,13 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
   <div class="inst">Instituto Politécnico Nacional</div>
   <div class="campus">@@CAMPUS@@</div>
   <div class="prog">Proyecto interdisciplinario · Licenciatura en Ciencia de Datos e Ingeniería en Sistemas Automotrices</div>
-  <h1>¿Qué tan limpio es realmente un auto eléctrico en México?</h1>
-  <div class="lema">Ciclo de vida de las baterías de vehículos eléctricos, de la mina al reciclaje, y quién paga el costo ambiental. México, 2016–2040.</div>
+  <h1>¿Adónde van las baterías?</h1>
+  <div class="lema">Trazabilidad y gestión inteligente del fin de vida de baterías de vehículos eléctricos e híbridos en México, 2016–2035 (horizonte 2040). Línea 2: Gestión inteligente de baterías.</div>
   <div class="tipo">Procedimiento matemático y análisis estadístico · Documento técnico</div>
   <div class="equipo">
 @@EQUIPO@@
   </div>
-  <div class="pie">@@FECHA@@ · Acuerdos de referencia: Acuerdo de París, Agenda 2030 (ODS 7, 12, 13), Convenio sobre la Diversidad Biológica</div>
+  <div class="pie">@@FECHA@@ · Marco de referencia: LGPGIR (reforma 2026), Ley General de Economía Circular (2026), Reglamento (UE) 2023/1542, Agenda 2030 (ODS 12 y 13) · Metodología DMAIC</div>
 </header>
 
 <div class="contenido">
@@ -176,16 +178,17 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
 <!-- ======================================================= PARTE I: TABLERO -->
 <h2 class="parte" id="tablero">Parte I · Tablero ejecutivo</h2>
 <section class="tablero">
-  <p style="margin-top:0"><b>Pregunta de investigación.</b> ¿Qué tan limpio es realmente un auto eléctrico en México si contamos todo el camino de su batería, de la mina al reciclaje, y quién paga el costo ambiental?</p>
+  <p style="margin-top:0"><b>Problemática.</b> En México nadie puede decir cuántas baterías de VE e híbridos salen de los vehículos, en qué estado de salud y adónde van.</p>
+  <p><b>Pregunta guía.</b> ¿Cuántas baterías llegarán al final de su vida en cada estado entre 2026 y 2035, en qué condición, y existe capacidad autorizada para reutilizarlas o reciclarlas?</p>
   <div class="kpis">
-    <div class="kpi"><div class="v">−@@RED_P50@@%</div><div class="e">CO₂e por km del eléctrico frente a gasolina, con la red actual</div><div class="d">IC 90%: @@RED_P5@@–@@RED_P95@@% · Monte Carlo n = 20,000</div></div>
-    <div class="kpi"><div class="v">@@EQ_KM@@ km</div><div class="e">para pagar el carbono de fabricar la batería</div><div class="d">≈ @@EQ_ANIOS@@ años a 12,400 km/año</div></div>
-    <div class="kpi"><div class="v">@@PROB@@%</div><div class="e">de las simulaciones en que el eléctrico emite menos</div><div class="d">red CENACE, últimos 24 meses</div></div>
-    <div class="kpi"><div class="v">@@T2040@@ mil t</div><div class="e">de baterías que saldrían de vehículos en 2040</div><div class="d">escenario base · bajo @@T2040B@@ / alto @@T2040A@@ mil t</div></div>
-    <div class="kpi"><div class="v">@@VIDA_CAL@@ vs @@VIDA_RESTO@@</div><div class="e">años de vida de la batería BEV: estados ≥ 24 °C vs el resto</div><div class="d">simulación de flota con Arrhenius</div></div>
+    <div class="kpi"><div class="v">@@T2035@@ t</div><div class="e">de baterías que saldrán de vehículos en 2035</div><div class="d">@@T_ACUM@@ t acumuladas 2026–2035 · escenario base</div></div>
     <div class="kpi"><div class="v">0 t/año</div><div class="e">de reciclaje autorizado para baterías de litio en México</div><div class="d">SEMARNAT: @@N_REC@@ autorizaciones de reciclaje, ninguna de litio · @@N_ACO_LI@@ de acopio aceptan litio</div></div>
     <div class="kpi"><div class="v">@@SV_PCT@@%</div><div class="e">de las toneladas retiradas en 2035 aptas para reúso o segunda vida</div><div class="d">@@SV_PCT_SH@@% sin híbridos · margen mínimo 20%</div></div>
-    <div class="kpi"><div class="v">@@NDVI_CAN@@%</div><div class="e">vegetación (NDVI) alrededor de Cananea, 2014–16 → 2023–25</div><div class="d">Mann-Kendall p &lt; 0.001 · no prueba causalidad</div></div>
+    <div class="kpi"><div class="v">@@TOP4_PCT@@%</div><div class="e">de las toneladas de 2035 en CDMX, Edomex, Jalisco y Nuevo León</div><div class="d">32 de 32 entidades en déficit de reciclaje de litio</div></div>
+    <div class="kpi"><div class="v">@@VENTAS_2025@@</div><div class="e">híbridos y eléctricos vendidos en 2025</div><div class="d">@@VENTAS_2016@@ en 2016 · INEGI RAIAVL</div></div>
+    <div class="kpi"><div class="v">@@VIDA_CAL@@ vs @@VIDA_RESTO@@</div><div class="e">años de vida de la batería BEV: estados ≥ 24 °C vs el resto</div><div class="d">simulación de flota con Arrhenius</div></div>
+    <div class="kpi"><div class="v">−@@RED_P50@@%</div><div class="e">CO₂e por km del eléctrico frente a gasolina, con la red actual</div><div class="d">IC 90%: @@RED_P5@@–@@RED_P95@@% · contexto: por qué vale la pena gestionarlas</div></div>
+    <div class="kpi"><div class="v">@@T2040@@ mil t</div><div class="e">de baterías retiradas en 2040 (horizonte)</div><div class="d">bajo @@T2040B@@ / alto @@T2040A@@ mil t</div></div>
   </div>
   <div class="fases">
     <div class="fase"><b>1–2 · Datos</b>10 fuentes públicas, ETL con sha256, 47 pruebas</div>
@@ -199,22 +202,29 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
   </div>
   <h3 style="margin-top:20px">Respuesta en tres frases</h3>
   <ol class="pasos">
-    <li>Aun con la electricidad que hoy usa México, un auto eléctrico emite casi la mitad de CO₂ por kilómetro que uno de gasolina, contando la mina, la fábrica y el uso.</li>
-    <li>El beneficio no se reparte igual: casi la mitad de sus emisiones ocurre al fabricarlo, lejos de quien lo maneja, y las baterías se desgastan antes en los estados calurosos.</li>
-    <li>Para 2035 saldrán @@T2035@@ t de baterías al año, y hoy México tiene 0 t/año de reciclaje autorizado para litio y ninguna norma específica que obligue a registrarlas: hay que crear trazabilidad, segunda vida y reciclaje desde ahora.</li>
+    <li>Entre 2026 y 2035 saldrán de los vehículos en México unas 400 mil baterías (@@T_ACUM@@ t); en 2035 serán @@T2035@@ t al año, concentradas en CDMX, Estado de México, Jalisco y Nuevo León.</li>
+    <li>Hoy el país tiene 0 t/año de reciclaje autorizado para baterías de litio y ninguna norma específica que obligue a registrarlas o a medir su salud.</li>
+    <li>Más de la mitad del peso podría reutilizarse antes de reciclarse, pero sin trazabilidad no hay forma de saber cuál: hacen falta pasaporte de batería, responsabilidad extendida del productor y plantas de reciclaje.</li>
   </ol>
 </section>
 
 <h3 id="figuras">Gráficas principales</h3>
+<figure><img src="@@FIG9@@" alt="Brecha de reciclaje por estado"><figcaption><b>Figura T1.</b> Baterías retiradas en 2035 por destino en las 10 entidades con más toneladas, frente a la capacidad autorizada de reciclaje de litio (SEMARNAT).</figcaption></figure>
 <div class="rejilla2">
-  <figure><img src="@@FIG2@@" alt="Emisiones por km por escenario de red"><figcaption><b>Figura T1.</b> g CO₂e/km del eléctrico (mediana e IC 90%) frente a gasolina, con cuatro escenarios de red.</figcaption></figure>
   <figure><img src="@@FIG1@@" alt="Toneladas retiradas"><figcaption><b>Figura T2.</b> Toneladas de baterías que salen de vehículos, 2024–2040, tres escenarios de ventas.</figcaption></figure>
   <figure><img src="@@FIG3@@" alt="Vida de batería vs clima"><figcaption><b>Figura T3.</b> Vida mediana de la batería BEV por estado frente a su temperatura media.</figcaption></figure>
-  <figure><img src="@@FIG4@@" alt="NDVI en minas"><figcaption><b>Figura T4.</b> NDVI anual en tres zonas mineras con prueba de Mann-Kendall.</figcaption></figure>
+  <figure><img src="@@FIG2@@" alt="Emisiones por km por escenario de red"><figcaption><b>Figura T4.</b> g CO₂e/km del eléctrico (mediana e IC 90%) frente a gasolina, con cuatro escenarios de red.</figcaption></figure>
+  <figure><img src="@@FIG4@@" alt="NDVI en minas"><figcaption><b>Figura T5.</b> NDVI anual en tres zonas mineras con prueba de Mann-Kendall.</figcaption></figure>
 </div>
-<figure><img src="@@FIG9@@" alt="Brecha de reciclaje por estado"><figcaption><b>Figura T5.</b> Baterías retiradas en 2035 por destino en las 10 entidades con más toneladas, frente a la capacidad autorizada de reciclaje de litio (SEMARNAT).</figcaption></figure>
 @@TABLA_RETIROS@@
 <p class="cap-tabla"><b>Tabla T1.</b> Baterías que salen de vehículos (BEV + PHEV + HEV). Suma de las medianas por tipo; la mediana de la suma puede diferir ligeramente.</p>
+
+<!-- ======================================================= PLANTEAMIENTO (desde docs/propuesta_mejorada.md) -->
+<h2 class="parte" id="planteamiento">Planteamiento del problema y propuesta</h2>
+<section class="planteamiento">
+<p class="nota-pie">Esta parte se genera desde <code>docs/propuesta_mejorada.md</code>: si cambias la propuesta, vuelve a correr <code>python -m modelos.generar_extenso</code>. El procedimiento matemático de cada cifra está en la Parte II.</p>
+@@PLANTEAMIENTO@@
+</section>
 
 <!-- ======================================================= PARTE II: EXTENSO -->
 <h2 class="parte">Parte II · Extenso: procedimiento matemático y estadístico</h2>
@@ -224,12 +234,13 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
 <p>Este documento explica con todo el detalle matemático y estadístico qué se hizo en el proyecto y por qué cada decisión es razonable. Está escrito para que cualquier integrante del equipo pueda entender el procedimiento sin haber escrito el código y pueda defenderlo ante preguntas del jurado. Cada fórmula se deduce, se justifica y se interpreta.</p>
 
 <h3>1.1 El proyecto en una página</h3>
-<p>El trabajo tiene cuatro bloques que se apoyan uno en otro:</p>
+<p>La pregunta del proyecto es adónde van las baterías de VE e híbridos en México. Para responderla, el trabajo tiene cinco bloques que se apoyan uno en otro:</p>
 <ol class="pasos">
   <li><b>Cuánto dura una batería</b> (capítulos 3 a 5). Con celdas de laboratorio (CALCE, NASA, Oxford) se estima el fin de vida con una distribución de Weibull que respeta las pruebas inconclusas (censura). Luego se traslada a la flota mexicana con la temperatura de cada estado (Arrhenius), el uso y el envejecimiento calendario.</li>
   <li><b>Cuántas baterías habrá</b> (capítulos 6 a 8). Las ventas de INEGI se proyectan a 2040 con una curva S de participación de mercado, se comparan seis modelos de series de tiempo con validación de origen móvil y la convolución de cohortes convierte ventas en baterías retiradas por estado.</li>
   <li><b>Predicción del estado de salud</b> (capítulo 9). Una red neuronal programada desde cero predice el SoH futuro y se prueba fuera de su temperatura de entrenamiento.</li>
   <li><b>Cuánto contamina y quién paga</b> (capítulos 10 y 11). Un modelo de ciclo de vida con Monte Carlo y análisis de Sobol compara el eléctrico con el de gasolina; los escenarios de red, el NDVI en minas y la geografía de los retiros responden quién paga.</li>
+  <li><b>Adónde van y quién las recibe</b> (capítulo 12). Las bajas se clasifican en reúso, segunda vida y reciclaje, se calcula cuándo llegan al reciclaje y se comparan, estado por estado, con la capacidad que SEMARNAT tiene autorizada.</li>
 </ol>
 
 <div class="caja clave"><div class="t">Los cinco resultados que hay que recordar</div><div class="c">

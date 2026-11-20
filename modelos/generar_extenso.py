@@ -3,8 +3,9 @@
 Uso, desde la raíz del proyecto:
     python -m modelos.generar_extenso
 
-Entradas : docs/plantilla_extenso.html, resultados/fase3..fase7/*, resultados/figuras/*.png,
-           modelos/config_fase3.yaml, datos/procesado/*.csv (solo para contar registros)
+Entradas : docs/plantilla_extenso.html, docs/propuesta_mejorada.md (planteamiento),
+           resultados/fase3..fase7/*, resultados/segunda_vida/*, resultados/brecha/*, resultados/figuras/*.png,
+           modelos/config_fase3.yaml, datos/procesado/*.csv
 Salida   : docs/extenso_bateria_ve_mx.html (un solo archivo: figuras y KaTeX embebidos, funciona sin internet)
 
 Todas las cifras de las tablas se leen de los archivos de resultados; nada se teclea a mano. Si cambias un
@@ -489,6 +490,106 @@ $$Q(y)=R_{{\\text{{rec}}}}(y)+(1-a)\\big[R_{{\\text{{veh}}}}(y)+R_{{\\text{{2a}}
 """
 
 
+# ------------------------------------------------------------------ planteamiento desde la propuesta
+# Secciones de docs/propuesta_mejorada.md que entran al extenso (las demás ya están en la Parte II).
+import re as _re_mod
+_re_num = _re_mod.compile(r"^\d+\.\s*")
+SECCIONES_PLANTEAMIENTO = ("Línea temática", "1.", "2.", "3.", "4.", "7.", "8.", "9.", "10.")
+
+
+def _en_linea(t):
+    """Markdown en línea mínimo: escapa HTML y convierte **negrita**, *cursiva* y `código`."""
+    import re as _re
+    t = t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    t = _re.sub(r"`([^`]+)`", r"<code>\1</code>", t)
+    t = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
+    t = _re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<i>\1</i>", t)
+    return t
+
+
+def md_a_html(texto):
+    """Convierte el subconjunto de Markdown que usa la propuesta (encabezados, párrafos, listas,
+    tablas y citas). Sin dependencias externas."""
+    import re as _re
+    lineas = texto.splitlines()
+    out, i = [], 0
+    while i < len(lineas):
+        ln = lineas[i]
+        if not ln.strip():
+            i += 1
+            continue
+        if ln.startswith("#"):
+            nivel = len(ln) - len(ln.lstrip("#"))
+            out.append(f"<h{min(nivel + 1, 4)}>{_en_linea(ln.lstrip('#').strip())}</h{min(nivel + 1, 4)}>")
+            i += 1
+        elif ln.startswith("|"):
+            filas = []
+            while i < len(lineas) and lineas[i].startswith("|"):
+                celdas = [c.strip() for c in lineas[i].strip().strip("|").split("|")]
+                if not all(_re.fullmatch(r":?-{3,}:?", c) for c in celdas):
+                    filas.append(celdas)
+                i += 1
+            cab = "".join(f"<th>{_en_linea(c)}</th>" for c in filas[0])
+            cuerpo = "".join("<tr>" + "".join(f"<td>{_en_linea(c)}</td>" for c in f) + "</tr>" for f in filas[1:])
+            out.append(f'<div class="tabla-scroll"><table><thead><tr>{cab}</tr></thead><tbody>{cuerpo}</tbody></table></div>')
+        elif ln.startswith(">"):
+            bloque = []
+            while i < len(lineas) and lineas[i].startswith(">"):
+                bloque.append(lineas[i].lstrip(">").strip())
+                i += 1
+            out.append(f'<div class="caja clave"><div class="c"><p>{_en_linea(" ".join(bloque))}</p></div></div>')
+        elif _re.match(r"(\d+\.|-) ", ln):
+            ordenada = ln[0].isdigit()
+            items = []
+            while i < len(lineas) and (lineas[i].startswith((" ", "\t")) or _re.match(r"(\d+\.|-) ", lineas[i])):
+                actual = lineas[i]
+                if _re.match(r"(\d+\.|-) ", actual):
+                    items.append(_re.sub(r"^(\d+\.|-) ", "", actual).strip())
+                elif actual.strip():
+                    items[-1] += " " + actual.strip()
+                i += 1
+            etiqueta = "ol" if ordenada else "ul"
+            out.append(f"<{etiqueta}>" + "".join(f"<li>{_en_linea(x)}</li>" for x in items) + f"</{etiqueta}>")
+        else:
+            parrafo = []
+            while i < len(lineas) and lineas[i].strip() and not lineas[i].startswith(("#", "|", ">")) \
+                    and not _re.match(r"(\d+\.|-) ", lineas[i]):
+                parrafo.append(lineas[i].strip())
+                i += 1
+            out.append(f"<p>{_en_linea(' '.join(parrafo))}</p>")
+    return "\n".join(out)
+
+
+def planteamiento_html():
+    """Toma de docs/propuesta_mejorada.md la línea temática, la causa, el análisis de causa raíz, el mapeo,
+    los resultados de la Línea 2, los supuestos validados, el marco legal, el DMAIC y la propuesta."""
+    texto = (DOCS / "propuesta_mejorada.md").read_text(encoding="utf-8")
+    bloques = texto.split("\n## ")[1:]
+    out = []
+    for k, b in enumerate(bloques):
+        titulo, _, cuerpo = b.partition("\n")
+        if not titulo.startswith(SECCIONES_PLANTEAMIENTO):
+            continue
+        ancla = f"p{k}"
+        limpio = _re_num.sub("", titulo.strip())            # la numeración de la propuesta no aplica aquí
+        out.append(f'<h3 id="{ancla}">{_en_linea(limpio)}</h3>\n{md_a_html(cuerpo)}')
+    return "\n\n".join(out)
+
+
+def indice_planteamiento():
+    texto = (DOCS / "propuesta_mejorada.md").read_text(encoding="utf-8")
+    items = []
+    for k, b in enumerate(texto.split("\n## ")[1:]):
+        titulo = b.partition("\n")[0].strip()
+        if titulo.startswith(SECCIONES_PLANTEAMIENTO):
+            corto = _re_num.sub("", titulo.split(" (")[0])
+            if ":" in corto:                                    # "Línea temática: reto…" → "Reto…"
+                resto = corto.split(":", 1)[1].strip()
+                corto = resto[:1].upper() + resto[1:]
+            items.append(f'<li><a href="#p{k}">{_en_linea(corto)}</a></li>')
+    return "".join(items)
+
+
 def equipo_html():
     out = []
     for nombre, programa, rol in EQUIPO:
@@ -540,6 +641,11 @@ def main() -> None:
     t40 = {e: re[(re.escenario == e) & (re.anio == 2040)].toneladas_p50.sum() / 1000 for e in ("bajo", "base", "alto")}
     fab, uso = rp.iloc[0], rp.iloc[1]
     hoy = dt.date.today()
+    ventas = pd.read_csv(RAIZ / "datos" / "procesado" / "inegi_ventas_nacional_mes.csv", parse_dates=["fecha"])
+    v_anio = ventas.groupby(ventas.fecha.dt.year).unidades.sum()
+    brecha = pd.read_csv(RES / "brecha" / "brecha_entidad.csv")
+    b35 = brecha[(brecha.anio == 2035) & (brecha.entidad != "No especificado")].sort_values("toneladas_p50", ascending=False)
+    base = re[re.escenario == "base"]
 
     valores = {
         "CAMPUS": UNIDAD,
@@ -566,6 +672,11 @@ def main() -> None:
         "TABLA_CODIGO": t_codigo(), "TABLA_PRUEBAS": t_pruebas(), "TABLA_SUPUESTOS": t_supuestos(cfg),
         "TABLA_VENTAS": t_ventas(pv),
         "CAP_LINEA2": cap_linea2(),
+        "PLANTEAMIENTO": planteamiento_html(),
+        "INDICE_PLANTEAMIENTO": indice_planteamiento(),
+        "VENTAS_2025": n(v_anio.loc[2025]), "VENTAS_2016": n(v_anio.loc[2016]),
+        "T_ACUM": n(base[base.anio.between(2026, 2035)].toneladas_p50.sum()),
+        "TOP4_PCT": n(100 * b35.head(4).toneladas_p50.sum() / b35.toneladas_p50.sum()),
         "T2035": n(re[(re.escenario == "base") & (re.anio == 2035)].toneladas_p50.sum()),
         "N_REC": n(json.loads((RES / "brecha/resumen.json").read_text(encoding="utf-8"))["por_rubro"]["reciclaje"]),
         "N_ACO_LI": n(json.loads((RES / "brecha/resumen.json").read_text(encoding="utf-8"))["acopio_litio_autorizaciones"]),

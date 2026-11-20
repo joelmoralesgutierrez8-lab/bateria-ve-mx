@@ -1,70 +1,122 @@
 <div align="center">
 
-# ¿Qué tan limpio es un auto eléctrico en México?
+# ¿Adónde van las baterías?
 
-**Ciclo de vida de las baterías de vehículos eléctricos, de la mina al reciclaje, y quién paga el costo ambiental**
+**Trazabilidad y gestión inteligente del fin de vida de baterías de vehículos eléctricos e híbridos en México, 2016–2035**
+
+Línea 2 · Gestión inteligente de baterías (VE / híbridos) · Metodología DMAIC
 
 Instituto Politécnico Nacional · Proyecto interdisciplinario de la Licenciatura en Ciencia de Datos
 y la Ingeniería en Sistemas Automotrices
 
-`Python 3.12` · `semilla 42` · `47 pruebas` · `10 fuentes` · `México 2016–2040`
+`Python 3.12` · `semilla 42` · `47 pruebas` · `10 fuentes` · `México 2016–2035 (horizonte 2040)`
 
 </div>
 
+> **Propuesta:** [`docs/propuesta_mejorada.md`](docs/propuesta_mejorada.md) (causa, causa raíz, mapeo, DMAIC y propuesta de gestión).
 > **Documento técnico completo:** [`docs/extenso_bateria_ve_mx.html`](docs/extenso_bateria_ve_mx.html)
-> (tablero ejecutivo + procedimiento matemático y estadístico, con fórmulas, tablas y figuras; ábrelo en el navegador).
+> (tablero, planteamiento y procedimiento matemático y estadístico; ábrelo en el navegador).
+> **Marco legal:** [`docs/marco_regulatorio.md`](docs/marco_regulatorio.md), con los textos oficiales en `docs/fuentes_primarias/`.
 
 ---
+
+**En tres frases.** Entre 2026 y 2035 saldrán de los vehículos en México unas 400 mil baterías (39 mil t), y en 2035
+serán 11,356 t al año, concentradas en CDMX, Estado de México, Jalisco y Nuevo León. Hoy el país tiene **0 t/año de
+reciclaje autorizado para baterías de litio** y ninguna norma específica que obligue a registrarlas o a medir su salud.
+Más de la mitad del peso podría reutilizarse antes de reciclarse, pero sin trazabilidad no hay forma de saber cuál.
+
+## El problema
+
+**Problemática.** En México nadie puede decir cuántas baterías de VE e híbridos salen de los vehículos, en qué estado de
+salud y adónde van. Las ventas pasaron de 8,265 unidades en 2016 a **149,031 en 2025** (22,208 BEV, 13,722 PHEV y
+113,101 HEV; INEGI RAIAVL), y las bajas pasan de unas 6 mil baterías en 2026 a 103 mil en 2035.
+
+**Pregunta guía.** ¿Cuántas baterías llegarán al final de su vida en cada estado entre 2026 y 2035, en qué condición, y
+existe capacidad autorizada para reutilizarlas o reciclarlas?
+
+| Hipótesis | Resultado |
+|---|---|
+| 1. Las bajas se concentran en pocas entidades | **Confirmada.** En 2035, CDMX 3,131 t, Estado de México 1,114 t, Jalisco 1,102 t y Nuevo León 1,031 t: 56% del total |
+| 2. En estados calurosos la batería dura menos | **Confirmada en el modelo.** BEV: 9.7 años en estados ≥ 24 °C frente a 15.8 en el resto (Arrhenius) |
+| 3. La capacidad de reciclaje autorizada es menor que las bajas | **Confirmada y más grave de lo previsto.** 0 t/año autorizadas para litio en las 32 entidades (SEMARNAT) |
+
+**Causa raíz:** falta de trazabilidad de la batería desde la venta hasta el desecho. El ion-litio está en una zona gris
+legal (residuo de manejo especial salvo que sea CRETIB; no aparece en el art. 31 de la LGPGIR), la infraestructura se
+hizo para plomo-ácido (2.02 millones t/año autorizadas para plomo, 0 para litio) y la Ley General de Economía Circular
+(2026) aún no tiene acuerdo de responsabilidad extendida para baterías.
 
 ## Resultados principales
 
 | | Resultado | Incertidumbre |
 |---|---|---|
-| **CO₂e por km** | Eléctrico **147 g** frente a **276 g** de gasolina: **45% menos** con la red actual | IC 90%: 23–60% |
-| **Equilibrio** | La batería "se paga" en carbono a los **~27,000 km** (~2.2 años) | 14,000–47,000 km |
-| **Robustez** | El eléctrico emite menos en el **99.5%** de 20,000 simulaciones | Monte Carlo, n = 20,000 |
-| **Baterías retiradas** | 198 t (2025) → 2,137 t (2030) → 11,356 t (2035) → **38,657 t (2040)** | 2040: 30.7–43.8 mil t por escenario |
+| **Baterías retiradas** | 330 t (2026) → 2,137 t (2030) → **11,356 t (2035)**; ~400 mil baterías y 39,223 t acumuladas 2026–2035 | 2035: 90–124 mil baterías (90%) |
+| **Destino en 2035** | 5,305 t salen con SoH > 80% · 4,711 t a segunda vida · 1,340 t a reciclaje directo (HEV) | |
+| **Segunda vida** | **88%** de las toneladas de 2035 aptas para reúso o segunda vida (100% sin HEV) | 81% con margen mínimo de 30% |
+| **Reciclaje de litio** | **0 t/año** autorizadas; 56 autorizaciones de acopio aceptan litio en 15 estados; 32 de 32 estados en déficit | SEMARNAT, 937 autorizaciones |
+| **Concentración** | CDMX, Edomex, Jalisco y Nuevo León: **56%** de las toneladas de 2035 | |
+| **Reciclaje retrasado** | Con 100% de adopción de segunda vida, el reciclaje de 2035 baja de 11,356 t a 3,232 t (7,294 t con 50%) | se pospone 3–7 años |
 | **Clima** | Vida de la batería BEV: **9.7 años** en estados ≥ 24 °C vs **15.8** en el resto | Arrhenius, flota simulada |
-| **Quién paga** | 47% de las emisiones del eléctrico se generan al fabricarlo (casi siempre fuera de México) | |
-| **Vegetación** | Cananea: NDVI −23% (2014–25), Mann–Kendall p < 0.001 | no prueba causalidad |
-| **Reciclaje de litio** | **0 t/año** autorizadas en México (2.02 millones t/año para plomo-ácido); 32 de 32 estados en déficit en 2035 | SEMARNAT, 937 autorizaciones |
-| **Segunda vida** | 88% de las 11,356 t retiradas en 2035 aptas para reúso o segunda vida (100% sin HEV) | 81% con margen mínimo de 30% |
-| **Reciclaje retrasado** | Con 100% de adopción de segunda vida, el reciclaje de 2035 baja de 11,356 t a 3,232 t | se pospone 3–7 años |
 | **Umbral de retiro** | Retiro al 70% de SoH en vez de 80%: −16% de toneladas en 2035 (9,499 t) | la brecha sigue total |
+| **Por qué importa (contexto)** | El eléctrico emite **147 g** de CO₂e/km frente a **276 g** de gasolina (45% menos); 47% de sus emisiones ocurre al fabricar la batería | IC 90%: 23–60% |
+| **Horizonte 2040** | 38,657 t retiradas al año | 30.7–43.8 mil t por escenario |
 
-<p align="center">
-  <img src="resultados/figuras/2_co2_por_escenario_red.png" width="49%" alt="CO2 por km por escenario de red">
-  <img src="resultados/figuras/1_toneladas_retiradas.png" width="49%" alt="Toneladas de baterías retiradas">
-</p>
-<p align="center">
-  <img src="resultados/figuras/3_vida_bateria_vs_clima.png" width="49%" alt="Vida de la batería vs clima">
-  <img src="resultados/figuras/4_ndvi_minas.png" width="49%" alt="NDVI en zonas mineras">
-</p>
 <p align="center">
   <img src="resultados/figuras/9_brecha_reciclaje_estatal.png" width="75%" alt="Brecha de reciclaje de litio por estado">
 </p>
+<p align="center">
+  <img src="resultados/figuras/1_toneladas_retiradas.png" width="49%" alt="Toneladas de baterías retiradas">
+  <img src="resultados/figuras/3_vida_bateria_vs_clima.png" width="49%" alt="Vida de la batería vs clima">
+</p>
+<p align="center">
+  <img src="resultados/figuras/2_co2_por_escenario_red.png" width="49%" alt="CO2 por km por escenario de red">
+  <img src="resultados/figuras/4_ndvi_minas.png" width="49%" alt="NDVI en zonas mineras">
+</p>
 
-**En tres frases.** Aun con la electricidad que hoy usa México, un auto eléctrico emite casi la mitad de CO₂
-por kilómetro que uno de gasolina. El beneficio no se reparte igual: casi la mitad de sus emisiones ocurre al
-fabricarlo y las baterías se desgastan antes en los estados calurosos. En 2035 saldrán 11,356 t de baterías al año
-y hoy México tiene 0 t/año de reciclaje autorizado para litio y ninguna norma específica que obligue a registrarlas:
-hay que crear trazabilidad, segunda vida y reciclaje desde ahora.
+## Marco legal y propuesta de gestión
+
+- **México:** marco general (LGPGIR, reforma DOF 19-01-2026; NOM-161 y su modificación de 2014; NOM-052), sin norma
+  específica para baterías de tracción. La Ley General de Economía Circular (DOF 19-01-2026) crea la responsabilidad
+  extendida del productor, pero solo aplica con acuerdos sectoriales que aún no existen para baterías.
+- **Unión Europea (Reglamento 2023/1542):** pasaporte de batería con SoH desde el 18 feb 2027 (art. 77), responsabilidad
+  ampliada del productor (art. 56), recuperación de litio de 50% en 2027 y 80% en 2031 (Anexo XII) y 6% de litio
+  reciclado en baterías nuevas en 2031 (art. 8).
+
+**Propuesta**
+1. Acuerdo de responsabilidad extendida del productor para baterías de tracción, con recolección financiada por armadoras e importadores.
+2. Pasaporte de batería mexicano vinculado al NIV: química, kWh, SoH al retiro y destino.
+3. Incluir el ion-litio en el art. 31 de la LGPGIR o en una NOM específica.
+4. Capacidad de reciclaje de litio priorizada en CDMX, Estado de México, Jalisco y Nuevo León.
+5. Segunda vida regulada entre 80% y 70% de SoH, que pospone 3–7 años la demanda de reciclaje.
+6. Plan para estados calurosos (Sinaloa, Yucatán), donde las baterías se retiran antes.
+
+## Plan de trabajo (DMAIC)
+
+| Etapa | Qué se hace | Fases | Estado |
+|---|---|---|---|
+| Definir | Problemática, alcance nacional, periodo 2016–2025 | — | Hecho |
+| Medir | Recolección y limpieza, 10 fuentes | 1–2 | Hecho |
+| Analizar | Causa raíz, vida útil, ventas, flujo de bajas, SoH, riesgo | 3–6 | Hecho |
+| Mejorar | Segunda vida, reciclaje retrasado, brecha SEMARNAT, marco legal, propuesta | 7 | Hecho |
+| Controlar | Repositorio, informe técnico, API y tablero | 8 | Se actualiza con `generar_extenso` y `generar_api_estatica` |
 
 ## Cómo está construido
 
 ```mermaid
 flowchart LR
-  A[Datos públicos<br/>INEGI · CENACE · NASA · CALCE<br/>Oxford · USGS · Landsat · GREET] --> B[ETL<br/>limpieza + sha256]
+  A[Datos públicos<br/>INEGI · SEMARNAT · CENACE · NASA<br/>CALCE · Oxford · USGS · Landsat · GREET] --> B[ETL<br/>limpieza + sha256]
   B --> C[Fin de vida por celda<br/>SoH 80%]
   C --> D[Weibull con censura<br/>β, η, bootstrap]
   D --> E[Celda → flota<br/>Arrhenius + calendario]
   B --> F[Ventas<br/>curva S + series de tiempo]
-  E --> G[Convolución de cohortes<br/>baterías retiradas 2016–2040]
+  E --> G[Convolución de cohortes<br/>baterías retiradas por estado]
   F --> G
   B --> H[Red neuronal SoH]
+  G --> K[Destino: reúso, segunda vida,<br/>reciclaje retrasado]
+  C --> K
+  K --> L[Brecha contra<br/>capacidad SEMARNAT]
+  B --> L
   G --> I[CO₂ de ciclo de vida<br/>Monte Carlo + Sobol]
   E --> I
-  I --> J[Escenarios de red · NDVI<br/>quién paga]
 ```
 
 | Fase | Qué hace | Método | Carpeta |
@@ -113,13 +165,14 @@ vida del vehículo (0.23). La red eléctrica pesa entre escenarios (reducción d
 
 ## Límites que hay que decir en voz alta
 
+- **No hay datos del canal informal** ni de baterías importadas en autos usados.
 - **Celdas de laboratorio** de EE. UU. y Reino Unido, no paquetes automotrices ni clima mexicano. Fuera de su temperatura de entrenamiento, la red neuronal pierde frente a una extrapolación lineal (RMSE 1.16 vs 0.66 pp).
 - **El techo de participación de mercado no es identificable** con datos de inicio de curva: se reportan tres escenarios (bajo, base, alto).
 - **Supuestos sin dato mexicano** (vida del auto, vida calendario, factor laboratorio→vehículo, pérdidas de red, crédito de reciclaje): todos con rango y fuente en `modelos/config_fase3.yaml`, y marcados como `SUPUESTO`.
 - **CENACE** publica solo a nivel nacional; algunos factores de emisión por tecnología son provisionales.
 - **NDVI sin zonas de control ni lluvia**: la tendencia no prueba que la mina sea la causa.
 - **No existen datos públicos de baterías retiradas en México**: el resultado final es un escenario, no un pronóstico puntual.
-- **SEMARNAT da capacidad autorizada, no procesada**, y la detección de litio es por texto libre (revisar `resultados/brecha/litio_autorizaciones.csv`).
+- **SEMARNAT da capacidad autorizada en papel, no toneladas realmente recicladas**, y la detección de litio es por texto libre (revisar `resultados/brecha/litio_autorizaciones.csv`).
 - **Segunda vida**: el margen mínimo, su duración y su adopción son supuestos con rango y fuente; no hay datos del canal informal.
 
 ## Reproducir
@@ -206,7 +259,7 @@ La raíz del repositorio es un sitio estático: `index.html` es la página de en
 
 | Endpoint | Contenido |
 |---|---|
-| `resumen.json` | Cifras clave: CO₂ por km, equilibrio, toneladas retiradas |
+| `resumen.json` | Cifras clave: toneladas retiradas, Línea 2 (2035), CO₂ por km |
 | `retiros.json` | Baterías retiradas 2016–2040 (unidades, MWh, toneladas; P5/P50/P95; escenarios) |
 | `ventas.json` | Proyección de ventas BEV/PHEV/HEV por escenario |
 | `vida-flota.json` | Weibull de flota y vida de batería por estado |
