@@ -1,0 +1,49 @@
+{
+  "margen_minimo_base": 0.2,
+  "p_apta_celdas": {
+    "p50": 1.0,
+    "ic": [
+      1.0,
+      1.0
+    ],
+    "celdas": 14,
+    "indeterminadas": 2
+  },
+  "sensibilidad_p_apta": [
+    {
+      "margen_minimo": 0.2,
+      "p_apta": 1.0
+    },
+    {
+      "margen_minimo": 0.1,
+      "p_apta": 1.0
+    },
+    {
+      "margen_minimo": 0.3,
+      "p_apta": 0.5454545454545454
+    }
+  ],
+  "por_anio": {
+    "2030": {
+      "unidades": 25490.714399321325,
+      "toneladas": 2137.1443722736103,
+      "pct_toneladas_aptas": 81.06246562147238,
+      "pct_toneladas_aptas_sin_hev": 100.00000000000001,
+      "toneladas_reciclaje_directo": 404.7224502180833
+    },
+    "2035": {
+      "unidades": 103362.17542236857,
+      "toneladas": 11356.162462228373,
+      "pct_toneladas_aptas": 88.19878081370746,
+      "pct_toneladas_aptas_sin_hev": 100.0,
+      "toneladas_reciclaje_directo": 1340.1656233190472
+    },
+    "2040": {
+      "unidades": 274058.4784034861,
+      "toneladas": 38657.30170225672,
+      "pct_toneladas_aptas": 92.41104943040092,
+      "pct_toneladas_aptas_sin_hev": 100.0,
+      "toneladas_reciclaje_directo": 2933.6835177250505
+    }
+  }
+}

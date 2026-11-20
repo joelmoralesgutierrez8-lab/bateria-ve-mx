@@ -127,6 +127,8 @@ def t_fuentes():
          cuenta("vegetacion_ndvi_zonas"), "Tendencia de vegetación"),
         ("GREET (Argonne) y literatura", "kg CO₂e por kWh de batería fabricada (LFP, NMC111, NMC811)",
          cuenta("greet_batpac_parametros"), "Fabricación de la batería"),
+        ("SEMARNAT, directorios de empresas autorizadas", "Autorizaciones de reciclaje, acopio, tratamiento y movimientos transfronterizos de residuos peligrosos (Rubros 1–14)",
+         cuenta("semarnat_autorizaciones"), "Brecha de reciclaje por estado (cap. 12)"),
     ]
     return tabla(["Fuente", "Contenido", "Registros", "Uso en el proyecto"], filas, num={2})
 
@@ -353,7 +355,11 @@ def t_codigo():
         ("modelos/riesgo/ciclo_vida.py", "g CO₂e/km del eléctrico y de gasolina; punto de equilibrio", "10"),
         ("modelos/riesgo/sobol.py", "Estimadores de Saltelli y Jansen con bootstrap", "10"),
         ("modelos/ejecutar_etica.py", "Escenarios de red, Mann–Kendall, Theil–Sen, reparto de emisiones", "11"),
-        ("modelos/ejecutar_figuras.py", "Las ocho figuras", "—"),
+        ("etl/semarnat.py", "Limpieza de los directorios de SEMARNAT, claves INEGI y clasificación de litio/plomo", "12"),
+        ("modelos/segunda_vida/clasificacion.py", "Margen 80→70 % por celda, aptitud, bootstrap y destinos", "12"),
+        ("modelos/ejecutar_reciclaje_retrasado.py", "Llegada al reciclaje con segunda vida (retraso uniforme)", "12"),
+        ("modelos/ejecutar_brecha_reciclaje.py", "Capacidades autorizadas por estado y brecha contra las bajas", "12"),
+        ("modelos/ejecutar_figuras.py, ejecutar_figura_brecha.py", "Las nueve figuras", "—"),
         ("modelos/config_fase3.yaml", "Todos los supuestos con su fuente", "A"),
     ]
     return tabla(["Archivo", "Qué hace", "Cap."], [(f"<code>{a}</code>", b, c) for a, b, c in filas])
@@ -371,6 +377,8 @@ def t_pruebas():
         ("Red neuronal", "2", "aprende una función no lineal; el ensamble es reproducible con la semilla"),
         ("Sobol", "1", "recupera los índices analíticos de la función de Ishigami"),
         ("Ciclo de vida", "1", "coincide con un cálculo hecho a mano"),
+        ("ETL (sintéticas)", "15", "formatos de INEGI y CENACE, factores de emisión, lectura de baterías, POWER, GREET, USGS, NDVI"),
+        ("Línea 2", "8", "clasificación de litio (positivos y negativos), claves INEGI sin pérdida de estados, lectura cp1252 y capacidades, destinos que suman el total, margen y clases por celda"),
     ]
     return tabla(["Grupo", "Pruebas", "Qué se verifica"], filas, num={1})
 
@@ -405,6 +413,80 @@ def t_ventas(pv):
         d = b[b.anio == anio].set_index("tipo")
         filas.append([str(anio)] + [n(d.loc[t, "p50"]) for t in TIPOS] + [n(d.p50.sum())])
     return tabla(["Año", "BEV", "PHEV", "HEV", "Total"], filas, num={1, 2, 3, 4})
+
+
+def cap_linea2():
+    sv = RES / "segunda_vida"
+    br = RES / "brecha"
+    p = pd.read_csv(sv / "p_apta.csv")
+    nac = pd.read_csv(sv / "destino_nacional.csv")
+    rr = pd.read_csv(sv / "reciclaje_retrasado_resumen.csv", index_col=0)
+    b = pd.read_csv(br / "brecha_entidad.csv")
+    rs = json.loads((br / "resumen.json").read_text(encoding="utf-8"))
+    sens = RES / "sensibilidad_umbral_70" / "retiros_umbral_80_vs_70.csv"
+    m0 = p.margen_minimo.iloc[0]
+    tp = tabla(["Margen mínimo", "Celdas aptas", "No aptas", "Indeterminadas", "p apta", "IC 90%"],
+               [(n(100 * r.margen_minimo) + "%", n(r.aptas), n(r.no_aptas), n(r.indeterminadas), n(r.p_apta, 2),
+                 ic(r.ic_bajo, r.ic_alto, 2)) for r in p.itertuples()], num={1, 2, 3, 4, 5}, destacar={0})
+    d35 = nac[(nac.margen_minimo == m0) & (nac.anio == 2035)]
+    filas = [(r.tipo, n(r.pb, 2), n(r.toneladas_p50), n(r.toneladas_sale_por_vehiculo_soh_mayor_80),
+              n(r.toneladas_segunda_vida_80_70), n(r.toneladas_reciclaje_directo), n(r.pct_apto_reuso_o_segunda_vida))
+             for r in d35.itertuples()]
+    t = d35[["toneladas_p50", "toneladas_sale_por_vehiculo_soh_mayor_80", "toneladas_segunda_vida_80_70",
+             "toneladas_reciclaje_directo"]].sum()
+    apto = 100 * (t.iloc[1] + t.iloc[2]) / t.iloc[0]
+    filas.append(("<b>Total</b>", "—", n(t.iloc[0]), n(t.iloc[1]), n(t.iloc[2]), n(t.iloc[3]), n(apto)))
+    td = tabla(["Tipo", "p_b", "Toneladas", "Sale con SoH > 80%", "Segunda vida", "Reciclaje directo", "% apto"],
+               filas, num={1, 2, 3, 4, 5, 6}, destacar={len(filas) - 1})
+    cols = [c for c in rr.columns if c.startswith("reciclaje_adopcion")]
+    tr = tabla(["Año", "Retiradas"] + [f"Reciclaje, adopción {float(c.split('_')[-1]) * 100:.0f}%" for c in cols],
+               [[str(a), n(rr.loc[a, "toneladas_retiradas"])] + [n(rr.loc[a, c]) for c in cols] for a in (2030, 2035, 2040)],
+               num=set(range(1, 2 + len(cols))))
+    b35 = b[b.anio == 2035].nlargest(10, "toneladas_p50")
+    tb = tabla(["Entidad", "Retiradas 2035 (t)", "Reciclaje directo (t)", "Reciclaje RP autorizado (t/año)",
+                "Reciclaje de baterías (plomo, t/año)", "Reciclaje de litio (t/año)", "Acopio con litio (autorizaciones)"],
+               [(r.entidad, n(r.toneladas_p50), n(r.toneladas_reciclaje_directo), n(r.cap_reciclaje_rp_total),
+                 n(r.cap_reciclaje_baterias), n(r.cap_reciclaje_litio), n(r.n_acopio_litio)) for r in b35.itertuples()],
+               num={1, 2, 3, 4, 5, 6})
+    ts = ""
+    if sens.exists():
+        se = pd.read_csv(sens).groupby(["umbral_retiro_soh", "anio"]).toneladas_p50.sum().unstack(0)
+        ts = tabla(["Año", "Retiro al 80% (t)", "Retiro al 70% (t)", "Diferencia"],
+                   [(str(a), n(se.loc[a, 0.8]), n(se.loc[a, 0.7]), n(100 * (se.loc[a, 0.7] / se.loc[a, 0.8] - 1)) + "%")
+                    for a in (2030, 2035, 2040)], num={1, 2, 3})
+    return f"""<!-- ======================================================= 12 -->
+<h2 class="cap" id="c12"><span class="num">12</span>Línea 2: segunda vida, reciclaje y brecha</h2>
+<p>Salir del vehículo no es llegar al reciclaje. Este capítulo responde tres preguntas de la línea de sustentabilidad 2 (gestión inteligente de baterías): cuántas baterías retiradas pueden reutilizarse, cuándo llegarían al reciclaje y si México tiene dónde reciclarlas.</p>
+<h3>12.1 Aptitud para segunda vida</h3>
+<p>Para cada celda de laboratorio que llega a 80% se mide cuánto tarda en bajar a 70%, como fracción de su primera vida:
+$$m=\\frac{{t_{{70}}-t_{{80}}}}{{t_{{80}}}}. \\tag{{12.1}}$$
+Una celda es <b>apta</b> si \\(m\\ge m_{{\\min}}\\) (sin «codo» de degradación acelerada). Si nunca llega a 70%, el margen observado es una cota inferior: es apta si ya supera el mínimo; si no, es indeterminada y sale del denominador. La incertidumbre se estima con bootstrap estratificado por conjunto.</p>
+{tp}
+<p class="cap-tabla"><b>Tabla 12.1.</b> Celdas aptas según el margen mínimo (supuesto base: 20%, sensibilidad 10% y 30%).</p>
+<p>En la flota, una batería sale del auto por el vehículo (con SoH &gt; 80%) o por la batería (SoH ≈ 80%), con fracción \\(p_b\\) por estado y tipo (capítulo 5). Las toneladas retiradas \\(R\\) se reparten así:
+$$R_{{\\text{{veh}}}}=(1-p_b)R,\\qquad R_{{\\text{{2a}}}}=p_b\\,p_{{\\text{{apta}}}}\\,R,\\qquad R_{{\\text{{rec}}}}=p_b\\,(1-p_{{\\text{{apta}}}})\\,R. \\tag{{12.2}}$$
+Los híbridos (HEV) van a reciclaje directo: sus paquetes son pequeños y están diseñados para durar la vida del auto.</p>
+{td}
+<p class="cap-tabla"><b>Tabla 12.2.</b> Destino de las toneladas retiradas en 2035 (escenario base, margen 20%).</p>
+<h3>12.2 Reciclaje retrasado</h3>
+<p>Una batería en segunda vida llega al reciclaje \\(d\\) años después; \\(d\\) se reparte uniforme entre \\(\\lfloor q_{{25}}(m)L\\rceil\\) y \\(\\lfloor q_{{75}}(m)L\\rceil\\), con \\(L\\) la vida mediana de la batería en la flota. Con adopción \\(a\\) (fracción de aptas que de verdad entra a segunda vida), la llegada al reciclaje en el año \\(y\\) es
+$$Q(y)=R_{{\\text{{rec}}}}(y)+(1-a)\\big[R_{{\\text{{veh}}}}(y)+R_{{\\text{{2a}}}}(y)\\big]+\\frac{{a}}{{|D|}}\\sum_{{d\\in D}}\\big[R_{{\\text{{veh}}}}(y-d)+R_{{\\text{{2a}}}}(y-d)\\big]. \\tag{{12.3}}$$</p>
+{tr}
+<p class="cap-tabla"><b>Tabla 12.3.</b> Toneladas que llegan a reciclaje según la adopción de segunda vida. La segunda vida no elimina el reciclaje: lo pospone.</p>
+<h3>12.3 Brecha de capacidad (SEMARNAT)</h3>
+<p>Se procesaron {n(rs["autorizaciones_leidas"])} autorizaciones de los directorios de empresas autorizadas para el manejo de residuos peligrosos. Una autorización cuenta como de litio si su texto menciona baterías, pilas, acumuladores o celdas de litio (se excluyen compuestos como hidróxido o jabón de litio). La brecha por estado es la capacidad autorizada de reciclaje de litio menos las toneladas retiradas.</p>
+{tb}
+<p class="cap-tabla"><b>Tabla 12.4.</b> Las 10 entidades con más toneladas en 2035 frente a su capacidad autorizada. Reciclaje RP = todo el reciclaje de residuos peligrosos (Rubro 1).</p>
+<figure><img src="@@FIG9@@" alt="Brecha por estado"><figcaption><b>Figura 12.1.</b> Toneladas de 2035 por destino y capacidad autorizada de reciclaje de litio.</figcaption></figure>
+<div class="caja clave"><div class="t">Idea clave del capítulo</div><div class="c">México tiene {n(rs["reciclaje_plomo_t_anio"] / 1e6, 2)} millones t/año de reciclaje autorizado para plomo-ácido y <b>0 t/año para litio</b>: las 32 entidades están en déficit total. Hay {n(rs["acopio_litio_autorizaciones"])} autorizaciones de acopio que aceptan litio en {n(rs["acopio_litio_entidades"])} estados, pero almacenar no es reciclar. La segunda vida puede posponer gran parte de la demanda de reciclaje y dar tiempo para construir plantas.</div></div>
+<h3>12.4 Sensibilidad al umbral de retiro</h3>
+<p>Las garantías de las armadoras suelen cubrir hasta 70% de capacidad. Con retiro al 70% (vida calendario escalada ×1.5) la batería dura más y más autos terminan antes que ella:</p>
+{ts}
+<p class="cap-tabla"><b>Tabla 12.5.</b> Toneladas retiradas con umbral de 80% (base) y 70% (escenario base de ventas). La brecha sigue siendo total.</p>
+<h3>12.5 Marco legal</h3>
+<p>México tiene un marco general (LGPGIR, última reforma DOF 19-01-2026; NOM-161 y su modificación de 2014; NOM-052) pero no una norma específica para baterías de tracción: el litio es residuo de manejo especial (art. 19 IX) salvo que muestre características CRETIB, y no aparece en la lista de peligrosos con plan de manejo (art. 31). La Ley General de Economía Circular (DOF 19-01-2026) crea la responsabilidad extendida del productor, aplicable solo mediante acuerdos sectoriales que aún no existen para baterías. El referente es el Reglamento (UE) 2023/1542: pasaporte de batería con SoH desde el 18 feb 2027 (art. 77, anexo XIII), recuperación de litio de 50% en 2027 y 80% en 2031 (anexo XII) y contenido reciclado mínimo de 6% de litio en 2031 (art. 8). Detalle y citas en <code>docs/marco_regulatorio.md</code>.</p>
+<div class="caja alerta"><div class="t">Límites de este capítulo</div><div class="c">La capacidad de SEMARNAT es autorizada, no procesada, y la detección de litio es por texto libre. El margen mínimo, la duración de la segunda vida y su adopción son supuestos con rango. No hay datos del canal informal.</div></div>
+"""
 
 
 def equipo_html():
@@ -483,6 +565,12 @@ def main() -> None:
         "TABLA_MC": t_mc(mc), "TABLA_SOBOL": t_sobol(sb), "TABLA_ESC": t_esc(es), "TABLA_NDVI": t_ndvi(nd),
         "TABLA_CODIGO": t_codigo(), "TABLA_PRUEBAS": t_pruebas(), "TABLA_SUPUESTOS": t_supuestos(cfg),
         "TABLA_VENTAS": t_ventas(pv),
+        "CAP_LINEA2": cap_linea2(),
+        "T2035": n(re[(re.escenario == "base") & (re.anio == 2035)].toneladas_p50.sum()),
+        "N_REC": n(json.loads((RES / "brecha/resumen.json").read_text(encoding="utf-8"))["por_rubro"]["reciclaje"]),
+        "N_ACO_LI": n(json.loads((RES / "brecha/resumen.json").read_text(encoding="utf-8"))["acopio_litio_autorizaciones"]),
+        "SV_PCT": n(json.loads((RES / "segunda_vida/resumen.json").read_text(encoding="utf-8"))["por_anio"]["2035"]["pct_toneladas_aptas"]),
+        "SV_PCT_SH": n(json.loads((RES / "segunda_vida/resumen.json").read_text(encoding="utf-8"))["por_anio"]["2035"]["pct_toneladas_aptas_sin_hev"]),
     }
     figuras = {f"FIG{i}": imagen(nombre) for i, nombre in enumerate(sorted(p.name for p in (RES / "figuras").glob("*.png")), 1)}
 

@@ -24,6 +24,12 @@ TABLAS = {
     "sobol.json": "fase6/sobol_indices.csv",
     "ndvi.json": "fase7/ndvi_tendencias.csv",
     "retiros-por-clima.json": "fase7/retiros_por_clima.csv",
+    "segunda-vida.json": "segunda_vida/destino_nacional.csv",
+    "segunda-vida-entidad.json": "segunda_vida/destino_entidad.csv",
+    "reciclaje-retrasado.json": "segunda_vida/reciclaje_retrasado_resumen.csv",
+    "brecha-reciclaje.json": "brecha/brecha_entidad.csv",
+    "litio-autorizaciones.json": "brecha/litio_autorizaciones.csv",
+    "sensibilidad-umbral-70.json": "sensibilidad_umbral_70/retiros_umbral_80_vs_70.csv",
 }
 
 
@@ -48,8 +54,21 @@ def resumen() -> dict:
         "equilibrio_km_p50": round(float(mc.loc["equilibrio_km", "p50"])),
         "toneladas_retiradas_base_p50": t,
         "toneladas_2040_por_escenario_p50": t40,
+        "linea2_2035": linea2(),
         "nota": "Escenarios con bandas de incertidumbre, no pronósticos puntuales.",
     }
+
+
+def linea2() -> dict:
+    sv = json.loads((RES / "segunda_vida/resumen.json").read_text(encoding="utf-8"))["por_anio"]["2035"]
+    br = json.loads((RES / "brecha/resumen.json").read_text(encoding="utf-8"))
+    return {"pct_toneladas_aptas_reuso_o_segunda_vida": round(sv["pct_toneladas_aptas"], 1),
+            "pct_toneladas_aptas_sin_hev": round(sv["pct_toneladas_aptas_sin_hev"], 1),
+            "toneladas_reciclaje_directo": round(sv["toneladas_reciclaje_directo"], 1),
+            "reciclaje_litio_autorizado_t_anio": br["reciclaje_litio_t_anio"],
+            "reciclaje_plomo_autorizado_t_anio": br["reciclaje_plomo_t_anio"],
+            "acopio_litio_autorizaciones": br["acopio_litio_autorizaciones"],
+            "entidades_con_deficit": br["2035"]["entidades_con_deficit"]}
 
 
 def main() -> None:

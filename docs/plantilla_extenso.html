@@ -143,8 +143,9 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
     <li><a href="#c9">9 Red neuronal para el SoH</a></li>
     <li><a href="#c10">10 CO₂ de ciclo de vida y Sobol</a></li>
     <li><a href="#c11">11 Escenarios, minas y quién paga</a></li>
-    <li><a href="#c12">12 Límites y amenazas a la validez</a></li>
-    <li><a href="#c13">13 Cómo reproducir</a></li>
+    <li><a href="#c12">12 Línea 2: segunda vida, reciclaje y brecha</a></li>
+    <li><a href="#c13">13 Límites y amenazas a la validez</a></li>
+    <li><a href="#c14">14 Cómo reproducir</a></li>
     <li><a href="#apA">A Supuestos y fuentes</a></li>
     <li><a href="#apB">B Preguntas del jurado</a></li>
     <li><a href="#apC">C Glosario</a></li>
@@ -182,15 +183,17 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
     <div class="kpi"><div class="v">@@PROB@@%</div><div class="e">de las simulaciones en que el eléctrico emite menos</div><div class="d">red CENACE, últimos 24 meses</div></div>
     <div class="kpi"><div class="v">@@T2040@@ mil t</div><div class="e">de baterías que saldrían de vehículos en 2040</div><div class="d">escenario base · bajo @@T2040B@@ / alto @@T2040A@@ mil t</div></div>
     <div class="kpi"><div class="v">@@VIDA_CAL@@ vs @@VIDA_RESTO@@</div><div class="e">años de vida de la batería BEV: estados ≥ 24 °C vs el resto</div><div class="d">simulación de flota con Arrhenius</div></div>
+    <div class="kpi"><div class="v">0 t/año</div><div class="e">de reciclaje autorizado para baterías de litio en México</div><div class="d">SEMARNAT: @@N_REC@@ autorizaciones de reciclaje, ninguna de litio · @@N_ACO_LI@@ de acopio aceptan litio</div></div>
+    <div class="kpi"><div class="v">@@SV_PCT@@%</div><div class="e">de las toneladas retiradas en 2035 aptas para reúso o segunda vida</div><div class="d">@@SV_PCT_SH@@% sin híbridos · margen mínimo 20%</div></div>
     <div class="kpi"><div class="v">@@NDVI_CAN@@%</div><div class="e">vegetación (NDVI) alrededor de Cananea, 2014–16 → 2023–25</div><div class="d">Mann-Kendall p &lt; 0.001 · no prueba causalidad</div></div>
   </div>
   <div class="fases">
-    <div class="fase"><b>1–2 · Datos</b>9 fuentes públicas, ETL con sha256, 39 pruebas</div>
+    <div class="fase"><b>1–2 · Datos</b>10 fuentes públicas, ETL con sha256, 47 pruebas</div>
     <div class="fase"><b>3 · Vida útil</b>Weibull con censura, Arrhenius, convolución</div>
     <div class="fase"><b>4 · Ventas</b>Curva S, SARIMA, ETS, LightGBM, LSTM</div>
     <div class="fase"><b>5 · Red neuronal</b>MLP en NumPy para SoH, transferencia térmica</div>
     <div class="fase"><b>6 · Riesgo</b>CO₂ de ciclo de vida, Monte Carlo, Sobol</div>
-    <div class="fase"><b>7 · Ética</b>Escenarios de red, NDVI en minas, quién paga</div>
+    <div class="fase"><b>7 · Ética y Línea 2</b>Quién paga, segunda vida, brecha SEMARNAT, marco legal</div>
     <div class="fase"><b>8 · Entregables</b>Repositorio, gráficas, guion, este extenso</div>
     <div class="fase"><b>Horizonte</b>Histórico 2016–2026 · proyección a 2040</div>
   </div>
@@ -198,7 +201,7 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
   <ol class="pasos">
     <li>Aun con la electricidad que hoy usa México, un auto eléctrico emite casi la mitad de CO₂ por kilómetro que uno de gasolina, contando la mina, la fábrica y el uso.</li>
     <li>El beneficio no se reparte igual: casi la mitad de sus emisiones ocurre al fabricarlo, lejos de quien lo maneja, y las baterías se desgastan antes en los estados calurosos.</li>
-    <li>Para 2040 México tendría que manejar decenas de miles de toneladas de baterías usadas al año; hay que preparar reciclaje y segunda vida desde ahora.</li>
+    <li>Para 2035 saldrán @@T2035@@ t de baterías al año, y hoy México tiene 0 t/año de reciclaje autorizado para litio y ninguna norma específica que obligue a registrarlas: hay que crear trazabilidad, segunda vida y reciclaje desde ahora.</li>
   </ol>
 </section>
 
@@ -209,6 +212,7 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
   <figure><img src="@@FIG3@@" alt="Vida de batería vs clima"><figcaption><b>Figura T3.</b> Vida mediana de la batería BEV por estado frente a su temperatura media.</figcaption></figure>
   <figure><img src="@@FIG4@@" alt="NDVI en minas"><figcaption><b>Figura T4.</b> NDVI anual en tres zonas mineras con prueba de Mann-Kendall.</figcaption></figure>
 </div>
+<figure><img src="@@FIG9@@" alt="Brecha de reciclaje por estado"><figcaption><b>Figura T5.</b> Baterías retiradas en 2035 por destino en las 10 entidades con más toneladas, frente a la capacidad autorizada de reciclaje de litio (SEMARNAT).</figcaption></figure>
 @@TABLA_RETIROS@@
 <p class="cap-tabla"><b>Tabla T1.</b> Baterías que salen de vehículos (BEV + PHEV + HEV). Suma de las medianas por tipo; la mediana de la suma puede diferir ligeramente.</p>
 
@@ -250,7 +254,7 @@ ol.pasos>li,ul.lista>li{margin:4px 0}
 <p class="cap-tabla"><b>Tabla 1.1.</b> Símbolos principales. Dos letras se parecen y no deben confundirse: β (forma de Weibull) y β₁, β₂ (constantes de Adam); η (escala de Weibull) y α (tasa de aprendizaje).</p>
 
 <h3>1.3 Ruta de lectura</h3>
-<p><b>Para exponer en cinco minutos:</b> el tablero (Parte I), la sección 4.6 y los capítulos 10 y 11. <b>Para defender el método:</b> capítulos 4, 6, 7 y 12, que dice con franqueza dónde puede fallar. <b>Para reproducir o modificar:</b> capítulo 13.</p>
+<p><b>Para exponer en cinco minutos:</b> el tablero (Parte I), la sección 4.6 y los capítulos 10 y 11. <b>Para defender el método:</b> capítulos 4, 6, 7 y 13, que dice con franqueza dónde puede fallar. <b>Para la gestión del fin de vida (Línea 2):</b> capítulo 12. <b>Para reproducir o modificar:</b> capítulo 14.</p>
 
 <!-- ======================================================= 2 -->
 <h2 class="cap" id="c2"><span class="num">2</span>Datos y preparación</h2>
@@ -535,7 +539,8 @@ con \(\hat S_i=\hat V_i/\hat V\) y \(\hat S_{T_i}=\hat E_{T_i}/\hat V\). Costo: 
 <p><b>Marco ético y normativo.</b> Acuerdo de París (la descarbonización de la red multiplica el beneficio), Agenda 2030 (ODS 7 energía asequible y no contaminante; 12 producción y consumo responsables, reciclaje; 13 acción por el clima) y Convenio sobre la Diversidad Biológica (vigilar la vegetación en zonas mineras).</p>
 
 <!-- ======================================================= 12 -->
-<h2 class="cap" id="c12"><span class="num">12</span>Límites y amenazas a la validez</h2>
+@@CAP_LINEA2@@
+<h2 class="cap" id="c13"><span class="num">13</span>Límites y amenazas a la validez</h2>
 <p>Se ordenan con la clasificación clásica de amenazas a la validez (Shadish, Cook y Campbell, 2002).</p>
 <h4>Validez de constructo: ¿medimos lo que decimos medir?</h4>
 <ul class="lista"><li>El SoH mide capacidad, no potencia ni resistencia interna; el fin de vida real también depende de la potencia.</li><li>El NDVI es un indicador indirecto del daño ambiental; no mide agua, suelo ni salud.</li><li>La comparación es solo de CO₂e; no incluye partículas, agua ni impactos locales de la minería.</li></ul>
@@ -548,9 +553,9 @@ con \(\hat S_i=\hat V_i/\hat V\) y \(\hat S_{T_i}=\hat E_{T_i}/\hat V\). Costo: 
 <div class="caja alerta"><div class="t">No hay validación directa del resultado final</div><div class="c">No existen datos públicos de baterías retiradas en México. El modelo se validó por partes (ventas con prueba hacia atrás, vida con laboratorio, estimadores con datos simulados) y se reporta como escenarios con bandas, no como pronóstico puntual.</div></div>
 
 <!-- ======================================================= 13 -->
-<h2 class="cap" id="c13"><span class="num">13</span>Cómo reproducir los resultados</h2>
+<h2 class="cap" id="c14"><span class="num">14</span>Cómo reproducir los resultados</h2>
 <p>Desde la raíz del proyecto, con el entorno virtual activo (Python 3.12):</p>
-<pre><code>.venv\Scripts\python -m unittest tests.test_weibull      # 24 pruebas
+<pre><code>.venv\Scripts\python -m unittest discover -s tests       # 47 pruebas
 .venv\Scripts\python -m modelos.ejecutar_vida_util       # cap. 3-4
 .venv\Scripts\python -m modelos.ejecutar_vida_flota      # cap. 5
 .venv\Scripts\python -m modelos.ejecutar_ventas          # cap. 6-7
@@ -559,13 +564,17 @@ con \(\hat S_i=\hat V_i/\hat V\) y \(\hat S_{T_i}=\hat E_{T_i}/\hat V\). Costo: 
 .venv\Scripts\python -m modelos.ejecutar_soh             # cap. 9
 .venv\Scripts\python -m modelos.ejecutar_riesgo          # cap. 10-11
 .venv\Scripts\python -m modelos.ejecutar_etica           # cap. 11
-.venv\Scripts\python -m modelos.ejecutar_figuras         # figuras
+.venv\Scripts\python -m modelos.ejecutar_segunda_vida    # cap. 12
+.venv\Scripts\python -m modelos.ejecutar_reciclaje_retrasado  # cap. 12
+.venv\Scripts\python -m modelos.ejecutar_brecha_reciclaje # cap. 12 (requiere SEMARNAT en el ETL)
+.venv\Scripts\python -m modelos.ejecutar_figuras         # figuras 1-8
+.venv\Scripts\python -m modelos.ejecutar_figura_brecha   # figura 9
 .venv\Scripts\python -m modelos.generar_extenso          # este documento</code></pre>
 @@TABLA_CODIGO@@
-<p class="cap-tabla"><b>Tabla 13.1.</b> Dónde está el código de cada parte.</p>
-<h3>13.1 Verificación independiente: las 24 pruebas</h3>
+<p class="cap-tabla"><b>Tabla 14.1.</b> Dónde está el código de cada parte.</p>
+<h3>14.1 Verificación independiente: las 47 pruebas</h3>
 @@TABLA_PRUEBAS@@
-<p class="cap-tabla"><b>Tabla 13.2.</b> Qué verifica cada grupo de pruebas. Además, el ETL tiene 15 pruebas propias (<code>tests/test_etl_sintetico.py</code>).</p>
+<p class="cap-tabla"><b>Tabla 14.2.</b> Qué verifica cada grupo de pruebas: 24 de modelos (<code>tests/test_weibull.py</code>), 15 del ETL (<code>tests/test_etl_sintetico.py</code>) y 8 de la Línea 2 (<code>tests/test_semarnat.py</code>).</p>
 
 <!-- ======================================================= A -->
 <h2 class="cap" id="apA"><span class="num">A</span>Supuestos y fuentes</h2>
@@ -586,7 +595,7 @@ con \(\hat S_i=\hat V_i/\hat V\) y \(\hat S_{T_i}=\hat E_{T_i}/\hat V\). Costo: 
 <dt>¿La red eléctrica mexicana, con mucho gas y combustóleo, no anula el beneficio?</dt><dd>No. Con la red actual el eléctrico es más limpio en el @@PROB@@% de las simulaciones, y con una red 15% más sucia la reducción mediana sigue en 41%.</dd>
 <dt>¿Por qué la red no aparece como importante en Sobol?</dt><dd>Porque en Sobol se varió solo dentro de su rango actual (393–442 g/kWh), que es estrecho. Su efecto es grande entre escenarios: de 41% a 67% de reducción.</dd>
 <dt>¿El NDVI prueba que la mina de Cananea daña el ambiente?</dt><dd>No. Muestra una pérdida significativa de vegetación, pero sin zonas de control ni lluvia no podemos separar el efecto de la mina del de la sequía.</dd>
-<dt>¿Cómo validaron algo para lo que no hay datos en México?</dt><dd>Por partes: ventas con prueba hacia atrás y origen móvil; vida con laboratorio; cada estimador con datos simulados de parámetros conocidos (24 pruebas). El resultado final se presenta como escenarios con bandas.</dd>
+<dt>¿Cómo validaron algo para lo que no hay datos en México?</dt><dd>Por partes: ventas con prueba hacia atrás y origen móvil; vida con laboratorio; cada estimador con datos simulados de parámetros conocidos (47 pruebas en total). El resultado final se presenta como escenarios con bandas.</dd>
 <dt>¿Por qué la red neuronal se programó en NumPy y no con una librería?</dt><dd>Para que cada ecuación del documento (9.1–9.4) corresponda a una línea de código verificable y el proyecto no dependa de instalaciones adicionales. La serie de ventas sí usa PyTorch para la LSTM.</dd>
 </dl>
 

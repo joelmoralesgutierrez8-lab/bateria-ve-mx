@@ -4,7 +4,10 @@
 semilla: 42
 
 umbrales_soh:
-  eol_vehiculo: 0.80        # fin de vida automotriz (estándar de garantías); métrica principal
+  eol_vehiculo: 0.80        # fin de vida automotriz; métrica principal. Validación (nov 2026): las garantías cubren
+                            # hasta 70 % de capacidad, 8 años/160,000 km (Tesla, Kia, Hyundai, Ford; carexpert.com.au,
+                            # greencars.com) y la literatura reporta retiro con 70-80 % (PMC10339184). 80 % = extremo alto;
+                            # sensibilidad a 70 % en resultados/sensibilidad_umbral_70/ (-16 % toneladas en 2035).
   fin_segunda_vida: 0.70    # salida del almacenamiento estacionario hacia reciclaje
   sensibilidad_reciclaje: 0.60
 
@@ -104,7 +107,7 @@ vida_flota:
     distribucion: weibull
     beta: 3.0
     eta: 16.0
-    fuente: "SUPUESTO (mediana ~14 años). Referencia: EPA, vida media de un auto de 13-14 años, citado por El Universal. El auto puede desecharse antes que su batería (riesgo competitivo)."
+    fuente: "SUPUESTO (mediana ~14 años). Referencia: EPA, vida media de un auto de 13-14 años, citado por El Universal. El auto puede desecharse antes que su batería (riesgo competitivo). Validación (nov 2026): edad promedio del parque mexicano 16.2 años al cierre de 2025 (IDF, Integrate Data Facts; prnewswire.com); la vida al desecho debe ser mayor que la edad promedio, así que la mediana de 14 años es conservadora."
   tipos:
     BEV:
       capacidad_kwh: {distribucion: triangular, min: 35, moda: 60, max: 85}
@@ -225,3 +228,29 @@ riesgo:
     u_red: {min: 0.0, max: 1.0, fuente: "cuantil de la intensidad mensual de la red de CENACE (últimos 24 meses)"}
   bateria_plomo_icev_t: 0.04
   fuente_plomo: "IEA, EV Life Cycle Assessment Calculator - Methodology (batería de plomo-ácido del auto de gasolina, 0.04 t CO2e)"
+
+# ---------------------------------------------------------------- Segunda vida (KPI de reúso / segunda vida)
+segunda_vida:
+  carpeta: resultados/segunda_vida
+  escenario: base
+  # SUPUESTO: una celda es apta para segunda vida si entre 80 % y 70 % de SoH le queda al menos esta fracción
+  # de su primera vida (sin "codo" de degradación acelerada). Sin norma mexicana ni dato de campo; se prueba 0.10 y 0.30.
+  margen_minimo: 0.20
+  # Validación de la duración (nov 2026): la literatura reporta 5-10 años adicionales de servicio en almacenamiento
+  # (Cao, Kurdkandi y Mi, SDSU) y 12-20 años para paquetes Nissan Leaf retirados con 60-67 % (SDSU, pub. 214);
+  # el retraso modelado (3-7 años) es conservador.
+  margen_sensibilidad: [0.10, 0.30]
+  bootstrap: 2000
+  nivel_intervalo: 0.90
+  anios_reporte: [2030, 2035, 2040]
+
+  # SUPUESTO (palanca de política): fracción de baterías aptas que de verdad entra a segunda vida.
+  # 0 = situación actual sin mercado ni norma; 0.5 y 1.0 = escenarios con incentivo o regulación.
+  adopcion_segunda_vida: [0.0, 0.5, 1.0]
+  anio_peso_vida: 2035          # año de bajas por entidad para ponderar la vida de batería nacional
+  # SUPUESTO: en HEV el modelo de flota no simula vida de batería (dura más que el auto) y sus paquetes son
+  # pequeños (NiMH o Li, ~1-2 kWh); sin dato de segunda vida, van directo a reciclaje en este paso.
+  # Validación (nov 2026): Toyota diseña sus baterías híbridas para durar la vida del vehículo, con garantía de 10 años o
+  # 240,000 km (toyota.ca); los paquetes NiMH son de ~1.8 kWh (Prius); el destino habitual es recolección por la red de
+  # concesionarios y reciclaje o reacondicionamiento de módulos para otro híbrido, no almacenamiento estacionario.
+  tipos_sin_segunda_vida: [HEV]

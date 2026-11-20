@@ -81,6 +81,13 @@ def procesar_todo(cfg: dict) -> dict[str, dict]:
     p = ruta(cfg["vegetacion"]["salida"])
     intentar("vegetacion_ndvi_zonas", p.exists(), lambda: L.limpiar_ndvi(pd.read_csv(p)),
              "ejecuta: python -m etl.descargas vegetacion (requiere config/zonas_mineras.csv)")
+    # --- SEMARNAT: directorios de empresas autorizadas (descarga manual, ver config/fichas.yaml)
+    from etl import semarnat as S
+    c = ruta(cfg["semarnat"]["carpeta"])
+    intentar("semarnat_autorizaciones", c.exists() and any(c.glob("Rubro*.csv")),
+             lambda: S.limpiar_directorios(c), "sin archivos Rubro*.csv en datos/crudo/semarnat")
+    intentar("semarnat_import_export", c.exists() and any(c.glob("Rubro14*.csv")),
+             lambda: S.limpiar_import_export(c), "sin Rubro14*.csv en datos/crudo/semarnat")
     return res
 
 
@@ -123,9 +130,10 @@ def generar_fichas(res: dict[str, dict], cfg: dict) -> None:
     mapa = {"inegi_ventas": "inegi_ventas_entidad_mes", "cenace_generacion": "cenace_factor_emision_regional",
             "nasa_pcoe": "bateria_nasa_pcoe", "calce": "bateria_calce", "oxford": "bateria_oxford",
             "greet_batpac": "greet_batpac_parametros", "usgs_mcs": "usgs_minerales",
-            "nasa_power": "nasa_power_temperatura", "vegetacion": "vegetacion_ndvi_zonas"}
+            "nasa_power": "nasa_power_temperatura", "vegetacion": "vegetacion_ndvi_zonas",
+            "semarnat_capacidad": "semarnat_autorizaciones"}
     for clave, m in meta.items():
-        r = res.get(mapa[clave], {"df": None, "motivo": "no ejecutado"})
+        r = res.get(mapa.get(clave, clave), {"df": None, "motivo": "dataset aún no descargado ni procesado"})
         df = r["df"]
         if df is None:
             estado = f"**Sin datos procesados todavía.** {r['motivo']}"

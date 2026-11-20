@@ -32,6 +32,7 @@ datos/crudo/*/*
 !datos/crudo/*/.gitkeep
 !datos/crudo/cenace/factores_emision_por_tecnologia.csv
 !datos/crudo/greet_batpac/parametros_ciclo_vida.csv
+!datos/crudo/plantas_litio/plantas_reciclaje_litio_mx.csv
 datos/procesado/*
 !datos/procesado/.gitkeep
 

@@ -114,3 +114,31 @@ vegetacion:
     - "El NDVI mide verdor, no biodiversidad ni calidad de agua/suelo."
     - "Sin zonas definidas por ti el dataset queda vacío: zonas mineras sin datos = brecha explícita."
     - "Landsat 30 m; minas pequeñas o subterráneas pueden no verse."
+semarnat_capacidad:
+  nombre: Directorios de empresas autorizadas para el manejo de residuos peligrosos, Rubros 1-14 (SEMARNAT, DGGIMAR), y tablas del Compendio DGEIA
+  url: "Directorios DGGIMAR (CSV, descarga manual nov 2026) y https://apps1.semarnat.gob.mx:8443/dgeia/compendio_2021/archivos/01_residuosp/d3_residuop01_05_d.pdf"
+  origen_geografico: México; desglose por entidad federativa y modalidad (reciclaje, acopio, tratamiento, etc.)
+  clima: No aplica
+  periodo_nominal: "Series anuales del Compendio DGEIA (último consultado: edición 2021); el Inventario Nacional de Residuos Peligrosos actualizado a 2025 está anunciado pero sin enlace de descarga localizado (por verificar)"
+  variables: Número de autorizaciones, número de plantas, capacidad instalada autorizada (toneladas/año) por entidad, modalidad y año
+  licencia: Información pública de SEMARNAT (por verificar términos de uso)
+  sesgos_conocidos:
+    - "Capacidad AUTORIZADA, no volumen procesado: SEMARNAT advierte que las plantas no siempre operan a su capacidad total."
+    - "Es capacidad para residuos peligrosos en general; no hay desglose para baterías de litio. La brecha calculada será una cota superior de la capacidad disponible."
+    - "Las empresas autorizadas pueden atender residuos de todo el país, no solo de su entidad."
+    - "Las baterías de litio suelen clasificarse como residuo de manejo especial (LGPGIR art. 19, NOM-161), cuyo manejo autorizan sobre todo las entidades federativas; ese canal no aparece en esta tabla."
+    - "Clasificación de baterías de litio por texto libre (etl/semarnat.py, función es_litio): revisar resultados/brecha/litio_autorizaciones.csv."
+    - "Rubro 14 no indica si es importación o exportación; solo el país de destino u origen."
+plantas_litio:
+  nombre: Actores de acopio, reúso y reciclaje de baterías de litio de VE en México (compilación manual)
+  url: datos/crudo/plantas_litio/plantas_reciclaje_litio_mx.csv
+  origen_geografico: México (y la planta de FORTECH en Costa Rica que recibe baterías de la región)
+  clima: No aplica
+  periodo_nominal: "Fuentes de 2020 a nov 2026; consultadas el 19 nov 2026"
+  variables: Actor, etapa de la cadena, estado, país donde se procesa, estado operativo, capacidad anunciada (t/año), fuente
+  licencia: "Compilación propia a partir de notas de prensa, comunicados y fuentes institucionales (cada fila con su URL)"
+  sesgos_conocidos:
+    - "No es un padrón oficial: puede faltar algún actor pequeño o informal."
+    - "Las capacidades son ANUNCIADAS por las empresas, no auditadas."
+    - "Varias filas vienen de notas de prensa; 'anunciado_sin_confirmar' = no se encontró evidencia de operación."
+    - "Una presentación de FORTECH en gob.mx estima más de 7,000 t de residuos de baterías de VE en 2024; el modelo de este repo da ~200 t para 2025. La diferencia probablemente se debe a definiciones distintas (todo el ion-litio, mermas de fábrica, importaciones); por verificar antes de citarla."

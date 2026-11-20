@@ -1,0 +1,179 @@
+# Marco regulatorio de baterías de VE e híbridos (México vs. UE). Fuente de verdad para docs/marco_regulatorio.md.
+# estado: vigente | iniciativa | referente_internacional
+# cubre_litio_ve: si | generico | no | indirecto
+# verificacion: "fuente primaria" = DOF, gaceta o documento oficial; "compilacion" = mley.mx/FAOLEX; "por verificar" = fuente secundaria.
+fecha_consulta: "2026-11-19"
+
+mexico:
+  - id: lgpgir_art19_ix
+    instrumento: "LGPGIR, art. 19, fracc. IX"
+    estado: vigente
+    tipo: ley
+    resumen: "Pilas con litio, níquel, mercurio, cadmio, manganeso, plomo o zinc son residuos de manejo especial si no son peligrosas según la NOM."
+    cubre_litio_ve: generico
+    url: https://mley.mx/LGPGIR/articulo/19/
+    verificacion: "fuente primaria"
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+  - id: lgpgir_art19_viii
+    instrumento: "LGPGIR, art. 19, fracc. VIII"
+    estado: vigente
+    tipo: ley
+    resumen: "Residuos tecnológicos de fabricantes de productos electrónicos o de vehículos automotores."
+    cubre_litio_ve: indirecto
+    url: https://mley.mx/LGPGIR/articulo/19/
+    verificacion: "fuente primaria"
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+  - id: lgpgir_art31
+    instrumento: "LGPGIR, art. 31"
+    estado: vigente
+    tipo: ley
+    resumen: "Plan de manejo obligatorio para residuos peligrosos listados: fracc. IV acumuladores con plomo, fracc. V baterías de mercurio o níquel-cadmio. El ion-litio no aparece."
+    cubre_litio_ve: "no"
+    url: https://mley.mx/LGPGIR/articulo/31/
+    verificacion: "fuente primaria"
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+  - id: lgpgir_art5_xxxiv
+    instrumento: "LGPGIR, art. 5, fracc. XXXIV"
+    estado: vigente
+    tipo: ley
+    resumen: "Responsabilidad compartida: manejo integral de residuos urbanos y de manejo especial como corresponsabilidad de productores, distribuidores, consumidores y gobierno."
+    cubre_litio_ve: indirecto
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+    verificacion: "fuente primaria"
+  - id: lgpgir_art27_28
+    instrumento: "LGPGIR, arts. 27 y 28 (fracc. I y IV)"
+    estado: vigente
+    tipo: ley
+    resumen: "Fines de los planes de manejo; obligados: productores/importadores de los peligrosos del art. 31 (I-XI) y de pilas y baterías de manejo especial (fracc. IV, DOF 19-03-2014)."
+    cubre_litio_ve: generico
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+    verificacion: "fuente primaria"
+  - id: lgpgir_art33
+    instrumento: "LGPGIR, art. 33"
+    estado: vigente
+    tipo: ley
+    resumen: "Planes de manejo de peligrosos se registran ante SEMARNAT; los de manejo especial solo se presentan para conocimiento a los estados."
+    cubre_litio_ve: generico
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+    verificacion: "fuente primaria"
+  - id: nom161_2011
+    instrumento: "NOM-161-SEMARNAT-2011"
+    estado: vigente
+    tipo: norma
+    fecha_dof: "2013-02-01"
+    resumen: "Criterios para clasificar residuos de manejo especial y determinar cuáles requieren plan de manejo."
+    cubre_litio_ve: generico
+    url: https://www.gob.mx/cms/uploads/attachment/file/134113/20.-_NORMA_OFICIAL_MEXICANA_NOM-161-SEMARNAT-2011.pdf
+    verificacion: fuente primaria
+    archivo_local: docs/fuentes_primarias/NOM-161-SEMARNAT-2011_DOF_2013-02-01.pdf
+  - id: nom161_mod_2014
+    instrumento: "Acuerdo que modifica la NOM-161-SEMARNAT-2011"
+    estado: vigente
+    tipo: norma
+    fecha_dof: "2014-11-05"
+    resumen: "Incluye en el listado sujeto a plan de manejo las pilas con litio, níquel, mercurio, cadmio, manganeso, plomo o zinc."
+    cubre_litio_ve: generico
+    url: https://faolex.fao.org/docs/pdf/mex140271.pdf
+    verificacion: "fuente primaria"
+    archivo_local: docs/fuentes_primarias/Acuerdo_modifica_NOM-161_DOF_2014-11-05.pdf
+  - id: nom052_2005
+    instrumento: "NOM-052-SEMARNAT-2005"
+    estado: vigente
+    tipo: norma
+    resumen: "Identificación, clasificación y listados de residuos peligrosos."
+    cubre_litio_ve: indirecto
+    url: https://platiica.economia.gob.mx/normalizacion/nom-161-semarnat-2011/
+    verificacion: "fuente primaria"
+    archivo_local: docs/fuentes_primarias/NOM-052-SEMARNAT-2005_DOF_2006-06-23.pdf
+    nota: "Listado 5 (baterías, celdas y pilas) solo incluye Ni-Cd de producción (RP 1/01) y zinc-óxido de plata (RP 1/02); el litio no está listado."
+  - id: lgpgir_art25_2026
+    instrumento: "LGPGIR, art. 25 (párrafo adicionado DOF 19-01-2026)"
+    estado: vigente
+    tipo: ley
+    resumen: "La política de residuos se basa en los principios de circularidad, jerarquización y trazabilidad de la Ley General de Economía Circular."
+    cubre_litio_ve: indirecto
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+    verificacion: "fuente primaria"
+  - id: lgpgir_art106_2026
+    instrumento: "LGPGIR, art. 106, fracc. II (reformada DOF 19-01-2026)"
+    estado: vigente
+    tipo: ley
+    resumen: "Infracción por incumplir los acuerdos generales de implementación de la responsabilidad extendida del productor."
+    cubre_litio_ve: indirecto
+    archivo_local: docs/fuentes_primarias/LGPGIR_texto_vigente_ultima_reforma_DOF_2026-01-19.pdf
+    verificacion: "fuente primaria"
+  - id: lgec_2026
+    instrumento: "Ley General de Economía Circular (DOF 19-01-2026), arts. 3 XXXI, 6 X, 10, 47"
+    estado: vigente
+    tipo: ley
+    resumen: "Crea la responsabilidad extendida del productor, aplicable por acuerdos sectoriales de implementación; registro y plataforma nacional. No menciona baterías; reglamento pendiente a oct 2026."
+    cubre_litio_ve: generico
+    url: https://www.diputados.gob.mx/LeyesBiblio/pdf/LGEC.pdf
+    verificacion: "fuente primaria (en línea)"
+  - id: reg_lgpgir
+    instrumento: "Reglamento de la LGPGIR, arts. 16, 20 y 24"
+    estado: vigente
+    tipo: reglamento
+    resumen: "Modalidades, contenido y registro de planes de manejo; sin disposiciones para baterías de tracción."
+    cubre_litio_ve: generico
+    archivo_local: docs/fuentes_primarias/Reglamento_LGPGIR_ultima_reforma_DOF_2014-10-31.pdf
+    verificacion: "fuente primaria"
+  - id: proy_nom160_2026
+    instrumento: "PROY-NOM-160-SEMARNAT-2026 (en consulta)"
+    estado: proyecto
+    tipo: norma
+    resumen: "Elementos y procedimientos para planes de manejo de residuos peligrosos; trazabilidad (6.5.1). No menciona baterías."
+    cubre_litio_ve: "no"
+    url: https://dof.gob.mx/normasOficiales/9565/semarnat/semarnat.html
+    verificacion: "fuente primaria (en línea)"
+  - id: nom212_scfi_2017
+    instrumento: "NOM-212-SCFI-2017"
+    estado: vigente
+    tipo: norma
+    resumen: "Clasificación, seguridad e información comercial de pilas; no regula fin de vida."
+    cubre_litio_ve: "no"
+    url: https://dossierpolitico.com/2026/08/18/mexico-lleva-cuatro-anos-buscando-el-negocio-del-litio-pero-las-baterias-usadas-abren-otra-oportunidad/
+    verificacion: por verificar
+  - id: semarnat_informe_2025
+    instrumento: "SEMARNAT, informe de comisión 29576 (nov 2025)"
+    estado: vigente
+    tipo: documento_oficial
+    resumen: "Reconoce la falta de un marco normativo nacional específico y actualizado para manejo, transporte y reciclaje de estas baterías."
+    cubre_litio_ve: "no"
+    url: https://dsiappsdev.semarnat.gob.mx/inai/IX/2025/811/4T/RUC_29576_INF.pdf
+    verificacion: fuente primaria
+
+iniciativas:
+  - id: senado_2025_04_23
+    fecha: "2025-04-23"
+    camara: Senado
+    resumen: "Adiciona art. 28 Bis y fracc. VI Bis al art. 31 de la LGPGIR: baterías de litio sujetas a plan de manejo."
+    estado_legislativo: por verificar
+    url: https://infosen.senado.gob.mx/sgsp/gaceta/66/1/2025-04-23-1/assets/documentos/Inic_PT_Sens_art_31_gestion_int_residuos.pdf
+  - id: diputados_2025_04_30
+    fecha: "2025-04-30"
+    camara: Diputados
+    resumen: "Reforma art. 31 fracc. V para incluir baterías de ion-litio y obligar a planes de manejo específicos."
+    estado_legislativo: por verificar
+    url: https://sitl.diputados.gob.mx/LXVI_leg/cuadros_comparativos/2PO1/1020-2PO1-25.pdf
+  - id: diputados_2025_09_09
+    fecha: "2025-09-09"
+    camara: Diputados
+    resumen: "Título Quinto Bis 'De la Regulación de Pilas y Baterías': responsabilidad ampliada del productor (100 % del costo), índice nacional de recolección, contenido reciclado mínimo (6 % Ni, 6 % Li)."
+    estado_legislativo: "turnada a Comisión de Medio Ambiente y Recursos Naturales"
+    url: https://sitl.diputados.gob.mx/LXVI_leg/cuadros_comparativos/1PO2/0116-1PO2-25.pdf
+
+union_europea:
+  instrumento: "Reglamento (UE) 2023/1542 sobre pilas y baterías y sus residuos"
+  vigor: "2023-08-17"
+  archivo_local: docs/fuentes_primarias/Reglamento_UE_2023-1542_DOUE_L191_2023-07-28.pdf
+  publicacion: "DOUE L 191 de 28.7.2023"
+  obligaciones:
+    - {id: pasaporte, articulo: "art. 77 y Anexo XIII (punto 4: estado de salud y estado de la batería)", valor: "obligatorio (VE, transporte ligero, industriales > 2 kWh)", fecha: "2027-02-18", url: "https://single-market-economy.ec.europa.eu/batteries_en"}
+    - {id: recuperacion_litio, articulo: "art. 71 y Anexo XII parte C", valor_pct: [50, 80], fecha: ["2027-12-31", "2031-12-31"], url: "https://eur-lex.europa.eu/summary/EN/LEGISSUM:4704179"}
+    - {id: recuperacion_co_cu_pb_ni, valor_pct: [90, 95], fecha: ["2027-12-31", "2031-12-31"], url: "https://eur-lex.europa.eu/summary/EN/LEGISSUM:4704179"}
+    - {id: eficiencia_reciclaje_litio, valor_pct: [65, 70], fecha: ["2025-12-31", "2030-12-31"], articulo: "art. 71 y Anexo XII parte B"}
+    - {id: contenido_reciclado_2031, articulo: "art. 8.2", valor_pct: {cobalto: 16, plomo: 85, litio: 6, niquel: 6}, fecha: "2031-08-18", url: "https://www.iea.org/policies/16763-eu-sustainable-batteries-regulation"}
+    - {id: contenido_reciclado_2036, valor_pct: {cobalto: 26, plomo: 85, litio: 12, niquel: 15}, fecha: "2036", url: "https://www.iea.org/policies/16763-eu-sustainable-batteries-regulation"}
+    - {id: rep_productor, articulo: "Cap. VIII, art. 56", valor: "aplicable", fecha: "2025-08-18", url: "https://www.bakermckenzie.com/en/insight/publications/resources/product-risk-radar-articles/eu-sustainable-batteries-regulation"}
+    - {id: debida_diligencia, valor: "pospuesta", fecha: "2027-08-18", url: "https://www.bakermckenzie.com/en/insight/publications/resources/product-risk-radar-articles/eu-sustainable-batteries-regulation"}

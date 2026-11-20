@@ -1,0 +1,66 @@
+{
+  "autorizaciones_leidas": 937,
+  "autorizaciones_sin_entidad": 1,
+  "por_rubro": {
+    "acopio": 665,
+    "aprovechamiento": 3,
+    "confinamiento": 3,
+    "incineracion": 9,
+    "reciclaje": 181,
+    "reutilizacion": 1,
+    "tratamiento": 75
+  },
+  "reciclaje_rp_total_t_anio": 7053049.199999999,
+  "reciclaje_plomo_t_anio": 2023344.0,
+  "reciclaje_litio_autorizaciones": 0,
+  "reciclaje_litio_t_anio": 0.0,
+  "acopio_litio_autorizaciones": 56,
+  "acopio_litio_entidades": 15,
+  "import_export_litio": [
+    {
+      "empresa": "Dowell Schlumberger de México, S.A. de C.V.",
+      "toneladas": 20.0,
+      "tipo_residuo": "Baterías de metal litio",
+      "pais": "Estados Unidos"
+    },
+    {
+      "empresa": "Dowell Schlumberger de México, S.A. de C.V.",
+      "toneladas": 10.0,
+      "tipo_residuo": "Baterías de metal litio instaladas en un equipo",
+      "pais": "Estados Unidos"
+    }
+  ],
+  "import_export_plomo_t": 665517.1,
+  "2035": {
+    "toneladas_retiradas": 11341.331895060826,
+    "toneladas_reciclaje_directo": 1333.0039375436563,
+    "deficit_litio_t": 11341.331895060826,
+    "entidades_con_deficit": 32,
+    "criticos": [
+      {
+        "entidad": "Ciudad de México",
+        "toneladas_p50": 3130.564941285422,
+        "cap_reciclaje_litio": 0.0,
+        "n_acopio_litio": 2.0
+      },
+      {
+        "entidad": "México",
+        "toneladas_p50": 1113.7347245702051,
+        "cap_reciclaje_litio": 0.0,
+        "n_acopio_litio": 14.0
+      },
+      {
+        "entidad": "Jalisco",
+        "toneladas_p50": 1102.239185603958,
+        "cap_reciclaje_litio": 0.0,
+        "n_acopio_litio": 2.0
+      },
+      {
+        "entidad": "Nuevo León",
+        "toneladas_p50": 1030.6695075669247,
+        "cap_reciclaje_litio": 0.0,
+        "n_acopio_litio": 10.0
+      }
+    ]
+  }
+}
