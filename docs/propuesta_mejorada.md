@@ -108,7 +108,7 @@ manejo en México. Fichas completas en `datos/fichas/`; URL, fecha y SHA-256 en 
 | Fuente | Dataset | Uso | Limitación |
 |---|---|---|---|
 | INEGI | RAIAVL, ventas de híbridos y eléctricos por entidad | Entradas de baterías 2016–2025 | Subconteo: Chirey y Omoda dejaron de reportar en mayo de 2025 |
-| SEMARNAT | Directorios de empresas autorizadas (Rubros 1–14) | Capacidad de reciclaje y acopio por estado | Capacidad autorizada, no procesada; clasificación de litio por texto libre |
+| SEMARNAT | Directorios de empresas autorizadas (Rubros 1–14) | Capacidad de reciclaje y acopio por estado | Es capacidad autorizada en papel, no toneladas realmente recicladas; clasificación de litio por texto libre |
 | CENACE | Generación por tecnología | Intensidad de la red | Solo nacional; factores provisionales en 3 tecnologías |
 | NASA PCoE | Battery Data Set | Vida útil y SoH | Celdas 18650; 12 usadas, 8 censuradas |
 | CALCE (U. Maryland) | CS2 | Vida útil de referencia para la flota | Celdas de electrónica portátil |
@@ -200,6 +200,6 @@ Python reproducible: semilla 42, rutas relativas, SHA-256 por archivo, **47 prue
 - Celdas de laboratorio de EE. UU. y Reino Unido, no paquetes automotrices ni clima mexicano.
 - Weibull de NASA con solo 12 celdas (8 censuradas); con umbral de 70 % el ajuste de NASA y Oxford no es identificable.
 - El intervalo de PHEV al 90 % cubre solo 57 % en validación: está subestimado.
-- La capacidad de SEMARNAT es autorizada, no procesada, y la detección de litio es por texto libre.
+- La capacidad de SEMARNAT es la autorizada en papel, no las toneladas realmente recicladas, y la detección de litio es por texto libre.
 - No hay datos del canal informal ni de baterías importadas en autos usados.
 - La duración de la segunda vida y su adopción son supuestos con rango, no datos medidos.
